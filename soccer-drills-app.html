@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Skills - Home Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 .gradient-text {
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #a0a0a0;
+        }
+
+        .skill-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .skill-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.1em;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .skill-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .skill-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .drills-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .drill-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ff88;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .drill-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+
+        .drill-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #00ff88;
+        }
+
+        .drill-time {
+            display: inline-block;
+            background: rgba(0, 217, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+
+        .drill-description {
+            line-height: 1.6;
+            color: #d0d0d0;
+            margin-bottom: 10px;
+        }
+
+        .drill-steps {
+            margin-top: 15px;
+        }
+
+        .drill-steps li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+            color: #b0b0b0;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            color: #00ff88;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .total-time {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 15px;
+            color: #00d9ff;
+        }
+
+        .log-btn {
+            background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.1em;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(80, 80, 80, 0.4);
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .log-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(80, 80, 80, 0.6);
+            background: linear-gradient(135deg, #5a5a5a 0%, #3d3d3d 100%);
+        }
+
+        .practice-log-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .log-form {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .submit-log-btn {
+            background: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            color: #1a1a2e;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-log-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .log-entries {
+            margin-top: 30px;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f5576c;
+            position: relative;
+        }
+
+        .log-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .log-entry-name {
+            font-size: 1.3em;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .log-entry-date {
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .log-entry-skill {
+            color: #00d9ff;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .log-entry-time {
+            color: #d0d0d0;
+        }
+
+        .delete-log-btn {
+            background: rgba(245, 87, 108, 0.2);
+            border: 1px solid #f5576c;
+            color: #f5576c;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .delete-log-btn:hover {
+            background: rgba(245, 87, 108, 0.4);
+        }
+
+        .no-logs {
+            text-align: center;
+            color: #a0a0a0;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+
+        .clear-all-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #f5576c;
+            color: #f5576c;
+            padding: 12px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .clear-all-btn:hover {
+            background: rgba(245, 87, 108, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #a0a0a0;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ <span class="gradient-text">Soccer Skills</span></h1>
+            <p class="subtitle">Choose what you want to practice!</p>
+        </header>
+
+        <div class="skill-selector" id="skillSelector">
+            <div class="skill-grid">
+                <button class="skill-btn" onclick="showDrills('ballMastery')">
+                    <span class="emoji">⚽</span><br>Ball Mastery
+                </button>
+                <button class="skill-btn" onclick="showDrills('dribbling')">
+                    <span class="emoji">🏃</span><br>Dribbling
+                </button>
+                <button class="skill-btn" onclick="showDrills('shooting')">
+                    <span class="emoji">🎯</span><br>Shooting
+                </button>
+                <button class="skill-btn" onclick="showDrills('passing')">
+                    <span class="emoji">🎯</span><br>Passing
+                </button>
+                <button class="skill-btn" onclick="showDrills('juggling')">
+                    <span class="emoji">🤹</span><br>Juggling
+                </button>
+                <button class="skill-btn" onclick="showDrills('firstTouch')">
+                    <span class="emoji">👟</span><br>First Touch
+                </button>
+                <button class="skill-btn" onclick="showDrills('advancedMoves')">
+                    <span class="emoji">⭐</span><br>Advanced Skill Moves
+                </button>
+            </div>
+            <button class="log-btn" onclick="showPracticeLog()">
+                <span class="emoji">📝</span> My Practice Log
+            </button>
+        </div>
+
+        <div class="drills-container" id="drillsContainer">
+            <button class="back-btn" onclick="goBack()">← Back to Skills</button>
+            <div class="total-time" id="totalTime"></div>
+            <div id="drillsList"></div>
+        </div>
+
+        <div class="practice-log-container" id="practiceLogContainer">
+            <button class="back-btn" onclick="goBack()">← Back to Skills</button>
+
+            <div class="log-form">
+                <h2 style="color: #00ff88; margin-bottom: 20px;">📝 Log Your Practice</h2>
+
+                <div class="form-group">
+                    <label for="playerName">Your Name:</label>
+                    <input type="text" id="playerName" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="skillCategory">What did you practice?</label>
+                    <select id="skillCategory" required>
+                        <option value="">-- Choose a skill --</option>
+                        <option value="Ball Mastery">⚽ Ball Mastery</option>
+                        <option value="Dribbling">🏃 Dribbling</option>
+                        <option value="Shooting">🎯 Shooting</option>
+                        <option value="Passing">🎯 Passing</option>
+                        <option value="Juggling">🤹 Juggling</option>
+                        <option value="First Touch">👟 First Touch</option>
+                        <option value="Advanced Skill Moves">⭐ Advanced Skill Moves</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="practiceTime">How long did you practice?</label>
+                    <input type="number" id="practiceTime" placeholder="Minutes" min="1" max="60" required>
+                </div>
+
+                <button class="submit-log-btn" onclick="savePracticeLog()">
+                    Save Practice Session 🎉
+                </button>
+            </div>
+
+            <div class="log-entries">
+                <h2 style="color: #00d9ff; margin-bottom: 20px;">Your Practice History</h2>
+                <div id="logEntriesList"></div>
+                <button class="clear-all-btn" onclick="clearAllLogs()" id="clearAllBtn" style="display: none;">
+                    Clear All Logs
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            Created by Michael Kaser
+        </div>
+    </div>
+
+    <script>
+        const drills = {
+            ballMastery: [
+                {
+                    title: "Toe Taps",
+                    time: "2 minutes",
+                    description: "Touch the top of the ball with your toes, alternating feet as fast as you can!",
+                    steps: [
+                        "Stand with the ball in front of you",
+                        "Tap the top of the ball with your right foot",
+                        "Quickly switch and tap with your left foot",
+                        "Keep going faster and faster!",
+                        "Try to do 100 taps!"
+                    ]
+                },
+                {
+                    title: "Inside-Outside Touches",
+                    time: "3 minutes",
+                    description: "Roll the ball with the inside and outside of your foot.",
+                    steps: [
+                        "Use the inside of your foot to roll the ball across",
+                        "Use the outside of your foot to roll it back",
+                        "Do 20 times with each foot",
+                        "Try to keep the ball close to you"
+                    ]
+                },
+                {
+                    title: "L-Turns",
+                    time: "3 minutes",
+                    description: "Make L-shapes with the ball using your feet!",
+                    steps: [
+                        "Roll the ball forward with your sole",
+                        "Use the inside of your foot to turn it 90 degrees",
+                        "Do 10 L-turns with each foot",
+                        "Make sharp, quick turns!"
+                    ]
+                },
+                {
+                    title: "Scissors",
+                    time: "3 minutes",
+                    description: "A cool move to fake out defenders! Swing your foot around the ball.",
+                    steps: [
+                        "Stand with the ball in front of you",
+                        "Swing your right foot around the front of the ball (don't touch it!)",
+                        "Quickly push the ball away with the outside of your left foot",
+                        "Practice 15 times with each foot",
+                        "Go slow at first, then speed up!"
+                    ]
+                },
+                {
+                    title: "Foundation (Tic-Tocs)",
+                    time: "2 minutes",
+                    description: "Touch the ball side-to-side with the inside of your feet - like a clock ticking!",
+                    steps: [
+                        "Stand with feet shoulder-width apart",
+                        "Touch the ball with the inside of your right foot to push it left",
+                        "Touch with the inside of your left foot to push it back right",
+                        "Keep the ball moving side-to-side like a clock - tic-toc!",
+                        "Do 50 tic-tocs, counting each touch"
+                    ]
+                },
+                {
+                    title: "Pull-Backs",
+                    time: "2 minutes",
+                    description: "Pull the ball back with your sole and turn!",
+                    steps: [
+                        "Step on top of the ball with your sole",
+                        "Roll it backwards",
+                        "Turn your body 180 degrees",
+                        "Do 15 pull-backs with each foot",
+                        "Try to do it in one smooth motion!"
+                    ]
+                },
+                {
+                    title: "Step-Overs",
+                    time: "2 minutes",
+                    description: "Step over the ball to trick defenders!",
+                    steps: [
+                        "Stand next to the ball",
+                        "Step over the ball with your right foot (outside to inside)",
+                        "Push the ball away with your left foot",
+                        "Do 15 step-overs each direction",
+                        "Make it look like you're going one way, then go the other!"
+                    ]
+                },
+                {
+                    title: "Sole Rolls",
+                    time: "2 minutes",
+                    description: "Roll the ball with the bottom of your foot.",
+                    steps: [
+                        "Put your foot on top of the ball",
+                        "Roll it forward, backward, left, and right",
+                        "Make circles with the ball using your sole",
+                        "Do 10 rolls in each direction with each foot",
+                        "Keep the ball under control!"
+                    ]
+                }
+            ],
+            dribbling: [
+                {
+                    title: "Cone Weave",
+                    time: "5 minutes",
+                    description: "Set up 5 objects (cones, water bottles, shoes) and weave through them!",
+                    steps: [
+                        "Place 5 objects in a line, 3 steps apart",
+                        "Dribble through them using small touches",
+                        "Use both feet to control the ball",
+                        "Do it 5 times, try to get faster each time!"
+                    ]
+                },
+                {
+                    title: "Speed Dribble",
+                    time: "4 minutes",
+                    description: "Dribble as fast as you can while keeping control!",
+                    steps: [
+                        "Set a start and finish line (20 steps apart)",
+                        "Dribble to the line as fast as you can",
+                        "Use the outside of your feet",
+                        "Do 8 sprints total"
+                    ]
+                },
+                {
+                    title: "Inside-Outside Dribble",
+                    time: "4 minutes",
+                    description: "Change direction while dribbling using both sides of your foot.",
+                    steps: [
+                        "Dribble forward 5 steps",
+                        "Use the outside of your foot to push the ball sideways",
+                        "Use the inside of your foot to push it the other way",
+                        "Keep going back and forth!"
+                    ]
+                }
+            ],
+            shooting: [
+                {
+                    title: "Wall Shots",
+                    time: "5 minutes",
+                    description: "Practice shooting power by kicking against a wall!",
+                    steps: [
+                        "Stand 10 steps from a wall",
+                        "Shoot the ball hard at the wall",
+                        "Control it when it comes back",
+                        "Do 20 shots with each foot",
+                        "Try to hit the same spot each time!"
+                    ]
+                },
+                {
+                    title: "Accuracy Challenge",
+                    time: "4 minutes",
+                    description: "Set up a target and try to hit it!",
+                    steps: [
+                        "Place a target on the ground (bucket, cone, etc.)",
+                        "Stand 10 steps away",
+                        "Try to hit the target with your shot",
+                        "Do 15 shots, count how many you make!"
+                    ]
+                },
+                {
+                    title: "One-Touch Finish",
+                    time: "3 minutes",
+                    description: "Pass to yourself and shoot in one touch!",
+                    steps: [
+                        "Pass the ball gently to yourself",
+                        "Shoot with your first touch",
+                        "Aim for power and accuracy",
+                        "Do 15 shots with each foot"
+                    ]
+                }
+            ],
+            passing: [
+                {
+                    title: "Wall Passes",
+                    time: "5 minutes",
+                    description: "Use a wall as your passing partner!",
+                    steps: [
+                        "Stand 5 steps from a wall",
+                        "Pass the ball against the wall",
+                        "Control it and pass again",
+                        "Do 30 passes with your right foot",
+                        "Do 30 passes with your left foot"
+                    ]
+                },
+                {
+                    title: "Triangle Passing",
+                    time: "4 minutes",
+                    description: "Set up 3 objects in a triangle and pass between them!",
+                    steps: [
+                        "Place 3 cones/objects in a triangle",
+                        "Stand at one point",
+                        "Pass to the next point and follow your pass",
+                        "Keep going around the triangle",
+                        "Do 20 full circles"
+                    ]
+                },
+                {
+                    title: "Long Pass Practice",
+                    time: "3 minutes",
+                    description: "Practice longer passes with accuracy!",
+                    steps: [
+                        "Set up a target 15-20 steps away",
+                        "Try to pass the ball to the target",
+                        "Use the inside of your foot",
+                        "Do 15 long passes"
+                    ]
+                }
+            ],
+            juggling: [
+                {
+                    title: "Basic Juggling",
+                    time: "5 minutes",
+                    description: "Keep the ball in the air using your feet!",
+                    steps: [
+                        "Drop the ball and let it bounce once",
+                        "Kick it up with your laces (top of your foot)",
+                        "Try to do 5 juggles in a row",
+                        "Use both feet",
+                        "Try to beat your record!"
+                    ]
+                },
+                {
+                    title: "Thigh Juggling",
+                    time: "3 minutes",
+                    description: "Use your thighs to keep the ball up!",
+                    steps: [
+                        "Drop the ball from your hands",
+                        "Use your thigh to bounce it back up",
+                        "Try to do 10 thigh juggles",
+                        "Alternate between left and right thigh"
+                    ]
+                }
+            ],
+            firstTouch: [
+                {
+                    title: "Cushion Control",
+                    time: "4 minutes",
+                    description: "Practice controlling the ball softly!",
+                    steps: [
+                        "Throw the ball in the air",
+                        "Let it bounce once",
+                        "Cushion it with your foot when it comes down",
+                        "Keep the ball close to you",
+                        "Do 20 touches with each foot"
+                    ]
+                },
+                {
+                    title: "Wall Control",
+                    time: "4 minutes",
+                    description: "Control the ball coming back from the wall!",
+                    steps: [
+                        "Pass the ball hard against a wall",
+                        "Control it with one touch when it comes back",
+                        "Keep the ball close",
+                        "Do 25 touches total"
+                    ]
+                },
+                {
+                    title: "Turn and Control",
+                    time: "4 minutes",
+                    description: "Control the ball and turn in one motion!",
+                    steps: [
+                        "Toss the ball forward",
+                        "Control it with your first touch",
+                        "Turn 180 degrees with your second touch",
+                        "Do 15 times with each foot"
+                    ]
+                }
+            ],
+            advancedMoves: [
+                {
+                    title: "Maradona (Spin Move)",
+                    time: "4 minutes",
+                    description: "Named after the legendary Diego Maradona! Spin 360 degrees with the ball.",
+                    steps: [
+                        "Put your foot on top of the ball",
+                        "Roll the ball with your sole while spinning your body around",
+                        "Complete a full 360-degree turn while keeping the ball close",
+                        "Practice 10 spins with each foot",
+                        "Start slow, then speed up as you get better!",
+                        "This move is great for getting away from defenders!"
+                    ]
+                },
+                {
+                    title: "Rivelino (Step Over & Turn)",
+                    time: "4 minutes",
+                    description: "A step-over fake followed by a quick turn - classic Brazilian move!",
+                    steps: [
+                        "Step over the ball with your right foot (outside to inside)",
+                        "Plant that foot next to the ball",
+                        "Use the outside of your left foot to push the ball the other way",
+                        "Turn your body to follow the ball",
+                        "Do 12 times on each side",
+                        "Sell the fake - make it look like you're going one way!"
+                    ]
+                },
+                {
+                    title: "Cruyff Turn (Fake Shot & Turn)",
+                    time: "4 minutes",
+                    description: "Named after Johan Cruyff! Fake a pass or shot, then cut behind your standing leg.",
+                    steps: [
+                        "Dribble forward like you're going to pass or shoot",
+                        "Swing your kicking leg back like you're about to strike the ball",
+                        "Instead of kicking, use the inside of that foot to drag the ball behind your standing leg",
+                        "Turn 90-180 degrees and accelerate away",
+                        "Practice 10 times with each foot",
+                        "The key is selling the fake shot!"
+                    ]
+                },
+                {
+                    title: "Lunge (Fake Direction Change)",
+                    time: "3 minutes",
+                    description: "Drop your shoulder and step one way, then explode the other way!",
+                    steps: [
+                        "Dribble forward slowly",
+                        "Drop your left shoulder and step hard to the left (don't touch the ball)",
+                        "Quickly push off and burst to the right with the outside of your right foot",
+                        "Practice 10 times going left-then-right",
+                        "Practice 10 times going right-then-left",
+                        "Make your fake look REAL - that's what tricks defenders!"
+                    ]
+                },
+                {
+                    title: "Stop and Go",
+                    time: "3 minutes",
+                    description: "Stop the ball dead, then explode forward - catches defenders off guard!",
+                    steps: [
+                        "Dribble forward at medium speed",
+                        "Put your foot on top of the ball to stop it completely",
+                        "Pause for a split second (this freezes the defender)",
+                        "Explode forward by pushing the ball ahead with your laces",
+                        "Do 15 stop-and-go moves",
+                        "The surprise of stopping is what makes this move work!"
+                    ]
+                }
+            ]
+        };
+
+        function showDrills(skill) {
+            const skillSelector = document.getElementById('skillSelector');
+            const drillsContainer = document.getElementById('drillsContainer');
+            const drillsList = document.getElementById('drillsList');
+            const totalTime = document.getElementById('totalTime');
+
+            // Calculate total time
+            const selectedDrills = drills[skill];
+            const totalMinutes = selectedDrills.reduce((sum, drill) => {
+                return sum + parseInt(drill.time);
+            }, 0);
+
+            // Hide selector, show drills
+            skillSelector.style.display = 'none';
+            drillsContainer.style.display = 'block';
+
+            // Display total time
+            totalTime.innerHTML = `⏱️ Total Time: <strong>${totalMinutes} minutes</strong>`;
+
+            // Display drills
+            drillsList.innerHTML = selectedDrills.map(drill => `
+                <div class="drill-card">
+                    <div class="drill-title">${drill.title}</div>
+                    <div class="drill-time">⏱️ ${drill.time}</div>
+                    <div class="drill-description">${drill.description}</div>
+                    <div class="drill-steps">
+                        <strong>How to do it:</strong>
+                        <ol>
+                            ${drill.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function goBack() {
+            const skillSelector = document.getElementById('skillSelector');
+            const drillsContainer = document.getElementById('drillsContainer');
+            const practiceLogContainer = document.getElementById('practiceLogContainer');
+
+            skillSelector.style.display = 'block';
+            drillsContainer.style.display = 'none';
+            practiceLogContainer.style.display = 'none';
+        }
+
+        function showPracticeLog() {
+            const skillSelector = document.getElementById('skillSelector');
+            const practiceLogContainer = document.getElementById('practiceLogContainer');
+
+            skillSelector.style.display = 'none';
+            practiceLogContainer.style.display = 'block';
+
+            displayLogs();
+        }
+
+        function savePracticeLog() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const skillCategory = document.getElementById('skillCategory').value;
+            const practiceTime = document.getElementById('practiceTime').value;
+
+            if (!playerName || !skillCategory || !practiceTime) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            // Get existing logs from localStorage
+            let logs = JSON.parse(localStorage.getItem('soccerPracticeLogs') || '[]');
+
+            // Create new log entry
+            const newLog = {
+                id: Date.now(),
+                name: playerName,
+                skill: skillCategory,
+                time: parseInt(practiceTime),
+                date: new Date().toLocaleString()
+            };
+
+            // Add to logs array
+            logs.unshift(newLog); // Add to beginning of array
+
+            // Save to localStorage
+            localStorage.setItem('soccerPracticeLogs', JSON.stringify(logs));
+
+            // Clear form
+            document.getElementById('playerName').value = '';
+            document.getElementById('skillCategory').value = '';
+            document.getElementById('practiceTime').value = '';
+
+            // Refresh display
+            displayLogs();
+
+            // Show success message
+            alert('Practice logged! Great work! 🎉');
+        }
+
+        function displayLogs() {
+            const logEntriesList = document.getElementById('logEntriesList');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            const logs = JSON.parse(localStorage.getItem('soccerPracticeLogs') || '[]');
+
+            if (logs.length === 0) {
+                logEntriesList.innerHTML = '<div class="no-logs">No practice sessions logged yet. Get out there and practice! ⚽</div>';
+                clearAllBtn.style.display = 'none';
+                return;
+            }
+
+            clearAllBtn.style.display = 'block';
+
+            logEntriesList.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <div class="log-entry-header">
+                        <div class="log-entry-name">${log.name}</div>
+                        <button class="delete-log-btn" onclick="deleteLog(${log.id})">Delete</button>
+                    </div>
+                    <div class="log-entry-skill">${log.skill}</div>
+                    <div class="log-entry-time">⏱️ ${log.time} minutes</div>
+                    <div class="log-entry-date">📅 ${log.date}</div>
+                </div>
+            `).join('');
+        }
+
+        function deleteLog(logId) {
+            if (!confirm('Are you sure you want to delete this practice log?')) {
+                return;
+            }
+
+            let logs = JSON.parse(localStorage.getItem('soccerPracticeLogs') || '[]');
+            logs = logs.filter(log => log.id !== logId);
+            localStorage.setItem('soccerPracticeLogs', JSON.stringify(logs));
+            displayLogs();
+        }
+
+        function clearAllLogs() {
+            if (!confirm('Are you sure you want to clear ALL practice logs? This cannot be undone!')) {
+                return;
+            }
+
+            localStorage.removeItem('soccerPracticeLogs');
+            displayLogs();
+        }
+    </script>
+</body>
+</html>
