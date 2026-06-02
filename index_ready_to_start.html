@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player Training Hub</title>
+  <style>
+    :root {
+      --bg: #070b13;
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.13);
+      --text: #f7f7fb;
+      --muted: #b9c0d4;
+      --accent: #52ff9f;
+      --accent2: #43b8ff;
+      --danger: #ff5a7a;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(82,255,159,.22), transparent 35%),
+        radial-gradient(circle at top right, rgba(67,184,255,.25), transparent 35%),
+        linear-gradient(135deg, #07111f, #070b13 55%, #05070c);
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      padding: 28px 0 60px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #06101a;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .player-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .leaderboard-panel, .setup-panel {
+      margin: 0 0 24px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .leaderboard-row:last-child { border-bottom: 0; }
+    .leaderboard-row small { color: var(--muted); }
+    .status-text { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+
+    input, select, textarea {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: .95rem;
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+      width: 100%;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      color: #06101a;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-weight: 800;
+      border-radius: 14px;
+      padding: 12px 16px;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    button.danger {
+      background: rgba(255,90,122,.18);
+      color: #fff;
+      border: 1px solid rgba(255,90,122,.35);
+    }
+
+    .hero {
+      padding: 34px;
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.12);
+      margin-bottom: 24px;
+    }
+
+    .hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: -0.055em;
+      line-height: .95;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 1.08rem;
+      max-width: 720px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .stat, .card {
+      border: 1px solid rgba(255,255,255,.12);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat {
+      padding: 18px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.8rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card h3 {
+      margin: 0 0 14px;
+      font-size: 1.25rem;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .topic {
+      text-align: left;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--card2);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text);
+    }
+
+
+    .new-tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--accent);
+      font-size: .68rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      vertical-align: middle;
+    }
+
+    .topic small {
+      display: block;
+      color: var(--muted);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .plan-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(82,255,159,.14);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: .78rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .step input {
+      width: 20px;
+      height: 20px;
+      accent-color: #52ff9f;
+    }
+
+    .step b { display: block; }
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 3px;
+    }
+
+    .minutes {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(67,184,255,.12);
+      border: 1px solid rgba(67,184,255,.2);
+      margin: 16px 0;
+    }
+
+    .time {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .log-list {
+      display: grid;
+      gap: 10px;
+      max-height: 420px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .log-item {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .log-item b { display: block; }
+    .log-item span {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      border: 1px dashed rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hidden { display: none; }
+
+    .star-pop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 999;
+      pointer-events: none;
+      background: rgba(0,0,0,.18);
+    }
+
+    .star-pop.show {
+      display: grid;
+      animation: fadePop 1.45s ease forwards;
+    }
+
+    .star-burst {
+      font-size: clamp(4rem, 16vw, 9rem);
+      filter: drop-shadow(0 18px 35px rgba(0,0,0,.45));
+      animation: starBounce 1.15s cubic-bezier(.18,.89,.32,1.28);
+    }
+
+    @keyframes starBounce {
+      0% { transform: scale(.2) rotate(-20deg); opacity: 0; }
+      45% { transform: scale(1.25) rotate(8deg); opacity: 1; }
+      75% { transform: scale(.95) rotate(-4deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes fadePop {
+      0%, 72% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .level-card {
+      margin: 0 0 24px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(82,255,159,.16), rgba(67,184,255,.13));
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow: var(--shadow);
+    }
+
+    .level-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .level-top b {
+      font-size: 1.1rem;
+    }
+
+    .level-top span {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .progress-bar {
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .35s ease;
+    }
+
+    .badges {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .badge.locked {
+      opacity: .38;
+      filter: grayscale(1);
+    }
+
+    .badge b {
+      display: block;
+      font-size: .92rem;
+    }
+
+    .badge span {
+      display: block;
+      color: var(--muted);
+      font-size: .78rem;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 860px) {
+      .badges { grid-template-columns: 1fr; }
+    }
+
+
+    .challenge-card {
+      margin: 0 0 24px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at top right, rgba(255,215,0,.16), transparent 34%),
+        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .challenge-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .challenge-header h3 {
+      margin: 0 0 5px;
+      font-size: 1.35rem;
+    }
+
+    .challenge-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .challenge-reward {
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .challenge-list {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .challenge-task {
+      padding: 14px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .challenge-task:hover {
+      transform: translateY(-1px);
+      border-color: rgba(82,255,159,.42);
+      background: rgba(82,255,159,.10);
+    }
+
+    .challenge-task:focus {
+      outline: 2px solid rgba(82,255,159,.75);
+      outline-offset: 3px;
+    }
+
+    .challenge-task-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 9px;
+    }
+
+    .challenge-task b {
+      display: block;
+    }
+
+    .challenge-task span {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .mini-progress {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .35s ease;
+    }
+
+    .challenge-footer {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .challenge-complete {
+      margin-top: 12px;
+      padding: 13px;
+      border-radius: 16px;
+      background: rgba(82,255,159,.14);
+      border: 1px solid rgba(82,255,159,.26);
+      color: var(--accent);
+      font-weight: 900;
+      display: none;
+    }
+
+    .challenge-complete.show {
+      display: block;
+    }
+
+    .record-card {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .record-card h4 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .record-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .record-item {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .record-item b {
+      display: block;
+      font-size: .9rem;
+    }
+
+    .record-item span {
+      color: var(--accent);
+      display: block;
+      margin-top: 4px;
+      font-weight: 900;
+      font-size: 1.25rem;
+    }
+
+    .record-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .record-form label {
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 800;
+    }
+
+    .record-form input {
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .challenge-history {
+      margin-top: 14px;
+      padding: 13px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+
+    .challenge-history b {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .challenge-history-item {
+      color: var(--muted);
+      font-size: .9rem;
+      padding: 4px 0;
+    }
+
+    @media (max-width: 860px) {
+      .record-grid, .record-form { grid-template-columns: 1fr; }
+      .challenge-header { flex-direction: column; }
+      .challenge-reward { text-align: left; }
+    }
+
+
+
+
+    .migration-notice {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      width: min(420px, calc(100vw - 36px));
+      z-index: 1001;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(82,255,159,.22), rgba(67,184,255,.18));
+      border: 1px solid rgba(255,255,255,.2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      display: none;
+    }
+
+    .migration-notice.show { display: block; }
+    .migration-notice b { display:block; margin-bottom:5px; }
+    .migration-notice p { margin:0; color:var(--muted); line-height:1.4; font-size:.92rem; }
+
+
+    .stats-notice {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      width: min(390px, calc(100vw - 36px));
+      z-index: 1000;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(82,255,159,.22), rgba(67,184,255,.18));
+      border: 1px solid rgba(255,255,255,.2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      display: none;
+    }
+
+    .stats-notice.show {
+      display: block;
+      animation: noticeIn .25s ease, noticeOut .35s ease 9.65s forwards;
+    }
+
+    .stats-notice b {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+
+    .stats-notice p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: .92rem;
+    }
+
+    @keyframes noticeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes noticeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+
+
+    /* Mobile polish: cleaner player name + leaderboard layout */
+    @media (max-width: 700px) {
+      .app {
+        width: min(100% - 28px, 1120px);
+        padding-top: 18px;
+      }
+
+      header {
+        align-items: stretch;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        justify-content: flex-start;
+      }
+
+      .brand h1 {
+        font-size: 1.15rem;
+      }
+
+      .top-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .player-box {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .player-box input {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .player-box button,
+      .top-actions > button {
+        min-height: 46px;
+        white-space: nowrap;
+      }
+
+      .top-actions > button {
+        width: 100%;
+        order: 2;
+      }
+
+      .player-box {
+        order: 1;
+      }
+
+      .leaderboard-panel {
+        padding: 18px;
+      }
+
+      .leaderboard-panel .plan-title {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .leaderboard-panel .plan-title button {
+        width: 100%;
+      }
+
+      .leaderboard-row {
+        grid-template-columns: auto 1fr;
+        gap: 10px 12px;
+        padding: 14px 0;
+      }
+
+      .leaderboard-row > b:first-child {
+        font-size: 1.4rem;
+        line-height: 1;
+      }
+
+      .leaderboard-row > b:nth-child(3) {
+        grid-column: 2;
+        justify-self: start;
+        font-size: 1rem;
+      }
+
+      .leaderboard-row > small:last-child {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .hero h2 {
+        font-size: clamp(2rem, 12vw, 3.2rem);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .player-box {
+        grid-template-columns: 1fr;
+      }
+
+      .player-box button {
+        width: 100%;
+      }
+    }
+
+
+
+    .coach-dashboard-panel {
+      margin: 0 0 24px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(82,255,159,.13), rgba(67,184,255,.10));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .coach-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .coach-table { display: grid; gap: 10px; }
+    .coach-row {
+      display: grid;
+      grid-template-columns: 1.2fr .7fr .7fr 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .coach-row small { color: var(--muted); }
+    .coach-link {
+      margin-top: 10px;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .coach-link:hover { color: var(--accent); transform: none; }
+
+    @media (max-width: 700px) {
+      .coach-summary { grid-template-columns: repeat(2, 1fr); }
+      .coach-row { grid-template-columns: 1fr; gap: 5px; }
+    }
+
+
+    .feature-panel {
+      margin: 0 0 24px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.055));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .profile-list, .hof-list, .chart-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .profile-row, .hof-row, .chart-row {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+
+    .profile-row small, .hof-row small, .chart-row small { color: var(--muted); }
+
+    .chart-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .chart-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+    }
+
+    @media (max-width: 700px) {
+      .mini-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-actions { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 420px) {
+      .mini-grid { grid-template-columns: 1fr; }
+    }
+
+
+    .quick-actions-card {
+      margin: 0 0 24px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .quick-actions-card h3 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+
+    .quick-actions-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .quick-actions button {
+      min-height: 44px;
+    }
+
+    .quick-actions button.active-tab {
+      color: #06101a;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      box-shadow: 0 10px 30px rgba(82,255,159,.18);
+    }
+
+
+    @media (max-width: 760px) {
+      .quick-actions-card {
+        grid-template-columns: 1fr;
+      }
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: stretch;
+      }
+      .quick-actions button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .quick-actions { grid-template-columns: 1fr; }
+    }
+
+
+    .last-week-winner {
+      margin: 12px 0 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 215, 0, .12);
+      border: 1px solid rgba(255, 215, 0, .24);
+    }
+
+    .last-week-winner b { display: block; }
+    .last-week-winner span { color: var(--muted); font-size: .9rem; }
+
+    .challenge-editor {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.11);
+    }
+
+    .challenge-editor-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr .8fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .challenge-editor label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .challenge-editor input,
+    .challenge-editor select {
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 760px) {
+      .challenge-editor-grid { grid-template-columns: 1fr; }
+    }
+
+    .challenge-card.hero-challenge {
+      padding: 26px;
+      background:
+        radial-gradient(circle at top right, rgba(255,215,0,.22), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(82,255,159,.16), transparent 36%),
+        linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.07));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .challenge-card.hero-challenge .challenge-header h3 {
+      font-size: clamp(1.55rem, 4vw, 2.25rem);
+      letter-spacing: -.045em;
+    }
+
+    .level-card.level-ring-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .xp-ring {
+      --progress: 0;
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        conic-gradient(var(--accent) calc(var(--progress) * 1%), rgba(255,255,255,.12) 0);
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .xp-ring::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: #0b1320;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .xp-ring-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .xp-ring-content strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .xp-ring-content span {
+      color: var(--muted);
+      display: block;
+      font-size: .75rem;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .level-ring-info .progress-bar {
+      margin-top: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .level-card.level-ring-card {
+        grid-template-columns: 1fr;
+      }
+
+      .xp-ring {
+        justify-self: center;
+      }
+    }
+
+
+
+    .next-level-card {
+      margin: 0 0 24px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at top right, rgba(82,255,159,.16), transparent 34%),
+        linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.055));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .next-level-card h3 {
+      margin: 0 0 6px;
+      font-size: 1.3rem;
+    }
+
+    .next-level-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .xp-ways {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .xp-way {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+
+    .xp-way b {
+      display: block;
+      font-size: .92rem;
+      margin-bottom: 4px;
+    }
+
+    .xp-way span {
+      color: var(--accent);
+      font-size: .85rem;
+      font-weight: 900;
+    }
+
+    @media (max-width: 760px) {
+      .xp-ways { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 430px) {
+      .xp-ways { grid-template-columns: 1fr; }
+    }
+
+
+
+    .start-panel {
+      margin: 0 0 24px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .start-panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .start-panel-header h3 {
+      margin: 0 0 4px;
+      font-size: clamp(1.45rem, 4vw, 2.2rem);
+      letter-spacing: -.04em;
+    }
+
+    .start-panel-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .start-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .start-tab {
+      min-height: 52px;
+      color: var(--text);
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .start-tab.active {
+      color: #06101a;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      box-shadow: 0 14px 38px rgba(82,255,159,.18);
+    }
+
+    .start-view {
+      display: none;
+    }
+
+    .start-view.active {
+      display: block;
+    }
+
+    .start-view .challenge-card,
+    .start-view .card {
+      margin-bottom: 0;
+    }
+
+    .start-view .grid {
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .start-panel-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .start-tabs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    footer.credit {
+      margin-top: 28px;
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    footer.credit strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 860px) {
+      header, .player-box { align-items: stretch; flex-direction: column; }
+      .grid, .stats, .topics { grid-template-columns: 1fr; }
+      .hero { padding: 24px; }
+      input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">⚽</div>
+        <div>
+          <h1>Player Training Hub</h1>
+          <span>20-minute at-home soccer workouts</span>
+        </div>
+      </div>
+      <div class="top-actions player-only">
+        <div class="player-box">
+          <input id="playerName" placeholder="Player name" />
+          <button onclick="savePlayer()">Save</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h2>Train sharp. Track progress. Build confidence.</h2>
+      <p>Pick a training topic, complete the 20-minute session, and log your work to LEVEL UP! Small consistent training adds up fast. 
+        Don't forget the weekly Coaches Challenge to LEVEL UP faster!</p>
+    </section>
+
+    <section class="quick-actions-card">
+      <div>
+        <h3>🏆 Leaderboard</h3>
+        <p>See how you compare versus other players!</p>
+      </div>
+      <div class="quick-actions">
+        <button class="secondary" id="tabLeaderboard" onclick="showStatsPanel('leaderboardPanel', loadLeaderboard, this)">🏆 Weekly Leaderboard</button>
+        <button class="secondary" id="tabMyStats" onclick="showStatsPanel('playerProfilePanel', loadPlayerProfile, this)">👤 My Stats</button>
+        <button class="secondary" id="tabTeamGoal" onclick="showStatsPanel('monthlyChallengePanel', loadMonthlyChallenge, this)">🌙 Team Goal</button>
+        <button class="secondary" id="tabHallOfFame" onclick="showStatsPanel('hallOfFamePanel', loadHallOfFame, this)">🏅 Hall of Fame</button>
+      </div>
+    </section>
+
+    <section class="setup-panel hidden" id="supabaseSetup">
+      <h3>⚙️ Supabase Setup</h3>
+      <p style="color:var(--muted);margin-top:0;">Paste your public Supabase project URL and anon/publishable key. Do not use your service-role secret key.</p>
+      <div class="row">
+        <input id="supabaseUrl" placeholder="Supabase project URL" style="min-width:280px;flex:1;" />
+        <input id="supabaseKey" placeholder="Public anon/publishable key" style="min-width:280px;flex:1;" />
+        <button onclick="saveSupabaseConfig()">Save Supabase</button>
+      </div>
+      <div class="status-text" id="syncStatus">Supabase not configured yet. Local stats will still work.</div>
+    </section>
+
+    <section class="leaderboard-panel hidden" id="leaderboardPanel">
+      <div class="plan-title">
+        <h3>🏆 Team Leaderboard</h3>
+        <button class="secondary" onclick="loadLeaderboard()">Refresh</button>
+      </div>
+      <p style="color:var(--muted);margin-top:0;">Ranked by stars earned this week. This version uses a Sunday → Saturday soccer week.</p>
+      <div id="leaderboardList"><div class="empty">Log a session to start the leaderboard.</div></div>
+    </section>
+
+    <section class="feature-panel hidden" id="playerProfilePanel">
+      <div class="plan-title">
+        <h3>👤 My Stats</h3>
+        <button class="secondary" onclick="loadPlayerProfile()">Refresh</button>
+      </div>
+      <p style="color:var(--muted);margin-top:0;">See your database stats for the saved player name: stars, sessions, streak, favorite topic, and recent training progress.</p>
+      <div class="mini-grid">
+        <div class="stat"><strong id="profileSessions">0</strong><span>Sessions completed</span></div>
+        <div class="stat"><strong id="profileMinutes">0</strong><span>Total minutes</span></div>
+        <div class="stat"><strong id="profileStreak">0</strong><span>Day streak</span></div>
+        <div class="stat"><strong id="profileFavorite">—</strong><span>Favorite topic</span></div>
+      </div>
+      <div class="level-card" style="margin-top:16px;">
+        <div class="level-top" style="margin-bottom:0;">
+          <div>
+            <b id="profileStarsText">⭐ 0 Stars</b>
+            <span>Stars earned from completed sessions and bonuses</span>
+          </div>
+        </div>
+      </div>
+      <h3 style="margin-top:18px;">Last 10 Sessions</h3>
+      <div id="profileRecentSessions" class="profile-list"><div class="empty">Save a player name, then log a session.</div></div>
+    </section>
+
+    <section class="feature-panel hidden" id="monthlyChallengePanel">
+      <div class="plan-title">
+        <h3>🌙 Monthly Club Challenge</h3>
+        <button class="secondary" onclick="loadMonthlyChallenge()">Refresh</button>
+      </div>
+      <p style="color:var(--muted);margin-top:0;">Team goal: complete 50 total training sessions this month.</p>
+      <div class="level-top" style="margin-bottom:8px;">
+        <span id="monthlyChallengeText">0 / 50 team sessions</span>
+        <span id="monthlyChallengePercent">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="monthlyChallengeFill"></div></div>
+    </section>
+
+    <section class="feature-panel hidden" id="hallOfFamePanel">
+      <div class="plan-title">
+        <h3>🏅 Hall of Fame</h3>
+        <button class="secondary" onclick="loadHallOfFame()">Refresh</button>
+      </div>
+      <div id="hallOfFameList" class="hof-list"><div class="empty">Log sessions to build the Hall of Fame.</div></div>
+    </section>
+
+
+
+    <section class="coach-dashboard-panel hidden" id="coachDashboard">
+      <div class="plan-title">
+        <h3>⚽ Coach Dashboard</h3>
+        <button class="secondary" onclick="loadCoachDashboard()">Refresh</button>
+      </div>
+      <p style="color:var(--muted);margin-top:0;">All player stats from the Supabase database.</p>
+      <div class="challenge-editor">
+        <div class="plan-title">
+          <h3>⚡ Weekly Challenge Editor</h3>
+          <button class="secondary" onclick="saveCoachChallenge()">Save Challenge</button>
+        </div>
+        <p style="color:var(--muted);margin-top:0;">Change the weekly challenge without editing code. Note: challenge edits save on this coach device only in this version.</p>
+        <div class="row">
+          <input id="coachChallengeName" placeholder="Challenge name" style="min-width:240px;flex:1;" />
+          <input id="coachChallengeReward" type="number" min="1" max="25" placeholder="Bonus stars" style="width:150px;" />
+        </div>
+        <div class="challenge-editor-grid" id="challengeEditorTasks"></div>
+        <div class="row" style="margin-top:12px;">
+          <button class="secondary" onclick="resetCoachChallengeEditor()">Reset to Default</button>
+        </div>
+      </div>
+      <div class="coach-summary">
+        <div class="stat"><strong id="coachTotalPlayers">0</strong><span>Total players</span></div>
+        <div class="stat"><strong id="coachTotalSessions">0</strong><span>Total sessions</span></div>
+        <div class="stat"><strong id="coachTotalStars">0</strong><span>Total stars</span></div>
+        <div class="stat"><strong id="coachActivePlayers">0</strong><span>Active players</span></div>
+      </div>
+      <h3 style="margin-top:18px;">Player Stats</h3>
+      <div id="coachPlayerStats" class="coach-table"><div class="empty">Enter coach code 2121 to load stats.</div></div>
+      <h3 style="margin-top:22px;">Recent Sessions</h3>
+      <div id="coachRecentSessions" class="coach-table"><div class="empty">No recent sessions loaded yet.</div></div>
+      <h3 style="margin-top:22px;">Coach Charts</h3>
+      <div id="coachCharts" class="chart-list"><div class="empty">Charts load after coach code.</div></div>
+    </section>
+    <section class="level-card level-ring-card">
+      <div class="xp-ring" id="xpRing">
+        <div class="xp-ring-content">
+          <strong id="xpRingLevel">1</strong>
+          <span>LEVEL</span>
+        </div>
+      </div>
+
+      <div class="level-ring-info">
+        <div class="level-top">
+          <div>
+            <b id="playerLevel">Level 1 · Rookie</b>
+            <span id="xpText">0 / 500 XP to next level</span>
+          </div>
+          <div class="pill" id="starText">⭐ 0 Stars</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="xpFill"></div>
+        </div>
+        <div class="badges" id="badges"></div>
+      </div>
+    </section>
+
+    <section class="next-level-card">
+      <h3>🎯 Next Level</h3>
+      <p id="nextLevelText">Complete sessions and challenges to earn XP and level up.</p>
+      <div class="xp-ways">
+        <div class="xp-way"><b>⚽ Complete a Session</b><span>+100 XP</span></div>
+        <div class="xp-way"><b>🔥 Keep a Streak</b><span>Train 3 days in a row</span></div>
+        <div class="xp-way"><b>🏆 Finish Challenge</b><span>Bonus Stars</span></div>
+        <div class="xp-way"><b>🏅 Unlock Badges</b><span>Complete milestones</span></div>
+      </div>
+    </section>
+
+    <section class="start-panel" id="readyToStart">
+      <div class="start-panel-header">
+        <div>
+          <h3>Ready to Start?</h3>
+          <p>Choose Coach’s Challenge if you want a mission, or pick your own training topic.</p>
+        </div>
+      </div>
+
+      <div class="start-tabs" role="tablist" aria-label="Start training options">
+        <button class="start-tab active" id="startChallengeTab" onclick="showStartView('challenge')">⚡ Coach’s Challenge</button>
+        <button class="start-tab" id="startTopicsTab" onclick="showStartView('topics')">⚽ Choose Today’s Training Topic</button>
+      </div>
+
+      <div class="start-view active" id="challengeStartView">
+
+
+
+
+    <section class="challenge-card hero-challenge" id="weeklyChallengeCard">
+      <div class="challenge-header">
+        <div>
+          <h3 id="weeklyChallengeTitle">⚡ Coach Michael's Weekly Challenge</h3>
+          <p id="weeklyChallengeDescription">Complete this week's mission to earn bonus stars. Tap a challenge row to open that training session.</p>
+        </div>
+        <div class="pill challenge-reward" id="weeklyChallengeReward">Reward: ⭐⭐⭐⭐⭐</div>
+      </div>
+
+      <div class="challenge-list" id="challengeList"></div>
+
+      <div class="challenge-footer">
+        <div class="level-top" style="margin-bottom:0;">
+          <span id="challengeProgressText">0 / 5 sessions complete</span>
+          <span id="challengePercentText">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="challengeFill"></div>
+        </div>
+        <div class="challenge-complete" id="challengeComplete">
+          🏆 Challenge complete! You earned 5 bonus stars.
+        </div>
+
+        <div class="challenge-history" id="challengeHistory">
+          <b>🏆 Challenge History</b>
+          <div id="challengeHistoryList"></div>
+        </div>
+
+      </div>
+    </section>
+      </div>
+
+      <div class="start-view" id="topicsStartView">
+
+
+    <section class="grid">
+      <div class="card">
+        <h3>Choose today’s training topic</h3>
+        <div class="topics" id="topics"></div>
+      </div>
+
+      
+    </section>
+      </div>
+    </section>
+
+
+    <section class="card hidden" id="planCard" style="margin-top:20px;">
+      <div class="plan-title">
+        <h3 id="planName">Training Plan</h3>
+        <span class="pill">20 MINUTES</span>
+      </div>
+
+      <div class="timer">
+        <div>
+          <div class="time" id="timer">20:00</div>
+          <small style="color:var(--muted)">Use this as your workout clock.</small>
+        </div>
+        <div class="row">
+          <button onclick="startTimer()">Start</button>
+          <button class="secondary" onclick="pauseTimer()">Pause</button>
+          <button class="secondary" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+
+      <div class="steps" id="steps"></div>
+
+      <div class="record-card hidden" id="fastFeetRecords">
+        <h4>🏆 Fast Feet Personal Records</h4>
+        <p style="margin:0;color:var(--muted);font-size:.92rem;">Enter your best 30-second scores. Beat a record to earn ⭐ 2 bonus stars.</p>
+
+        <div class="record-grid">
+          <div class="record-item"><b>Toe Taps</b><span id="toeTapBest">0</span></div>
+          <div class="record-item"><b>Foundations</b><span id="foundationBest">0</span></div>
+          <div class="record-item"><b>Scissors</b><span id="scissorsBest">0</span></div>
+        </div>
+
+        <div class="record-form">
+          <label>Toe Taps
+            <input id="toeTapScore" type="number" min="0" placeholder="Score" />
+          </label>
+          <label>Foundations
+            <input id="foundationScore" type="number" min="0" placeholder="Score" />
+          </label>
+          <label>Scissors
+            <input id="scissorsScore" type="number" min="0" placeholder="Score" />
+          </label>
+        </div>
+
+        <button style="margin-top:12px;" onclick="saveFastFeetRecords()">Save Records</button>
+      </div>
+
+
+      <label for="notes">Session notes</label>
+      <textarea id="notes" placeholder="What felt good? What was hard? What should you keep working on?"></textarea>
+
+      <div class="row" style="margin-top:14px;">
+        <button onclick="completeSession()">Complete Session</button>
+        <button class="secondary" onclick="hidePlan()">Close</button>
+      </div>
+    </section>
+
+    <footer class="credit">
+      Created by <strong>Michael Kaser</strong><br />
+      <button class="coach-link" onclick="openCoachDashboard()">Coach View</button>
+    </footer>
+
+  </main>
+
+
+  <div class="stats-notice" id="statsNotice" role="status" aria-live="polite">
+    <b>📊 Stats update</b>
+    <p>Usage stats load from the database by the player name you save, like <strong>Ella K.</strong> Older local sessions will be synced safely when possible.</p>
+  </div>
+
+
+
+  <div class="migration-notice" id="migrationNotice" role="status" aria-live="polite">
+    <b>📦 Syncing training history</b>
+    <p id="migrationText">Checking this device for older local sessions...</p>
+  </div>
+
+  <div id="logList" class="hidden" aria-hidden="true"></div>
+  <div id="logListFallback" class="hidden" aria-hidden="true"></div>
+
+  <div class="star-pop" id="starPop">
+    <div class="star-burst">⭐</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const DEFAULT_TEAM_NAME = "Coach Michael Training Team";
+    let supabaseClient = null;
+    let currentTeamId = localStorage.getItem("supabaseTeamId") || null;
+    let currentPlayerId = localStorage.getItem("supabasePlayerId") || null;
+    let currentPlayerDbLogs = [];
+    let currentPlayerDbLoaded = false;
+
+    function titleCaseName(name) {
+      return (name || "").trim().replace(/\s+/g, " ").split(" ").map(w => w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : "").join(" ");
+    }
+
+    function getCurrentPlayerName() {
+      return titleCaseName(localStorage.getItem("playerName") || document.getElementById("playerName")?.value || "Player");
+    }
+
+    function getPlayerLogKey(name = getCurrentPlayerName()) {
+      return `trainingLog_${titleCaseName(name).toLowerCase().replace(/[^a-z0-9]+/g, "_") || "player"}`;
+    }
+
+    function calculateDatabaseStreak(logs) {
+      const trainingLogs = (logs || []).filter(l => !l.challenge_name && l.completed_at);
+      const uniqueDays = [...new Set(trainingLogs.map(l => new Date(l.completed_at).toDateString()))]
+        .map(x => new Date(x))
+        .sort((a,b) => b - a);
+
+      let streak = 0;
+      let today = new Date();
+      today.setHours(0,0,0,0);
+
+      for (let i = 0; i < uniqueDays.length; i++) {
+        const expected = new Date(today);
+        expected.setDate(today.getDate() - i);
+        if (uniqueDays[i].toDateString() === expected.toDateString()) streak++;
+        else break;
+      }
+
+      return streak;
+    }
+
+    function normalizeDbLogForUi(log) {
+      return {
+        player: getCurrentPlayerName(),
+        topic: log.topic,
+        minutes: log.challenge_name ? 0 : 20,
+        stars: log.stars_earned || 0,
+        xp: log.challenge_name ? 0 : 100,
+        notes: log.notes || "",
+        date: log.completed_at,
+        isBonus: !!log.challenge_name
+      };
+    }
+
+    function getUiLogs() {
+      return currentPlayerDbLoaded ? currentPlayerDbLogs.map(normalizeDbLogForUi) : getLog();
+    }
+
+    async function loadCurrentPlayerDbLogs() {
+      currentPlayerDbLoaded = false;
+      currentPlayerDbLogs = [];
+
+      if (!supabaseClient) {
+        return [];
+      }
+
+      const name = getCurrentPlayerName();
+      if (!name || name === "Player") {
+        return [];
+      }
+
+      try {
+        const teamId = await ensureTeam();
+        const { data: player, error: playerError } = await supabaseClient
+          .from("players")
+          .select("id,name")
+          .eq("team_id", teamId)
+          .ilike("name", name)
+          .limit(1)
+          .maybeSingle();
+
+        if (playerError) throw playerError;
+
+        if (!player) {
+          currentPlayerDbLoaded = true;
+          currentPlayerDbLogs = [];
+          renderLog();
+          renderStats();
+          renderGamification();
+          renderWeeklyChallenge();
+          renderChallengeHistory();
+          return [];
+        }
+
+        currentPlayerId = player.id;
+        localStorage.setItem("supabasePlayerId", currentPlayerId);
+
+        const { data: logs, error: logsError } = await supabaseClient
+          .from("training_logs")
+          .select("id,player_id,topic,stars_earned,completed_at,notes,challenge_name")
+          .eq("player_id", player.id)
+          .order("completed_at", { ascending: false })
+          .limit(500);
+
+        if (logsError) throw logsError;
+
+        currentPlayerDbLogs = logs || [];
+        currentPlayerDbLoaded = true;
+
+        renderLog();
+        renderStats();
+        renderGamification();
+        renderWeeklyChallenge();
+        renderChallengeHistory();
+
+        return currentPlayerDbLogs;
+      } catch (err) {
+        console.error(err);
+        currentPlayerDbLoaded = false;
+        setSyncStatus("Could not load database stats for this player: " + err.message);
+        return [];
+      }
+    }
+
+    function setMigrationNotice(message, show = true) {
+      const notice = document.getElementById("migrationNotice");
+      const text = document.getElementById("migrationText");
+      if (!notice || !text) return;
+      text.textContent = message;
+      notice.classList.toggle("show", show);
+    }
+
+    function getLegacyLocalLogsForName(name = getCurrentPlayerName()) {
+      const logs = [];
+      const normalizedName = titleCaseName(name).toLowerCase();
+
+      try {
+        const globalLog = JSON.parse(localStorage.getItem("trainingLog") || "[]");
+        globalLog.forEach(item => {
+          const itemPlayer = titleCaseName(item.player || "").toLowerCase();
+          if (!itemPlayer || itemPlayer === normalizedName) logs.push(item);
+        });
+      } catch (err) {
+        console.warn("Could not parse old global trainingLog", err);
+      }
+
+      try {
+        const playerLog = JSON.parse(localStorage.getItem(getPlayerLogKey(name)) || "[]");
+        playerLog.forEach(item => logs.push(item));
+      } catch (err) {
+        console.warn("Could not parse player-specific local log", err);
+      }
+
+      const seen = new Set();
+      return logs.filter(item => {
+        if (!item || !item.topic || !item.date) return false;
+        const key = `${item.topic}|${item.date}|${item.stars || 1}|${item.notes || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function dbHasMatchingSession(localItem) {
+      const localTime = new Date(localItem.date).getTime();
+      return currentPlayerDbLogs.some(dbItem => {
+        const dbTime = new Date(dbItem.completed_at).getTime();
+        const sameTopic = dbItem.topic === localItem.topic;
+        const sameStars = (dbItem.stars_earned || 0) === (localItem.stars || 1);
+        const closeTime = Math.abs(dbTime - localTime) < 60 * 1000;
+        return sameTopic && sameStars && closeTime;
+      });
+    }
+
+    async function migrateLocalSessionsToSupabase() {
+      if (!supabaseClient) return;
+      const name = getCurrentPlayerName();
+      if (!name || name === "Player") return;
+
+      const migrationKey = `migrationComplete_${getPlayerLogKey(name)}`;
+      if (localStorage.getItem(migrationKey) === "true") return;
+
+      const localLogs = getLegacyLocalLogsForName(name);
+      if (!localLogs.length) {
+        localStorage.setItem(migrationKey, "true");
+        return;
+      }
+
+      try {
+        setMigrationNotice("Checking this device for older local sessions...");
+        await ensurePlayer();
+        await loadCurrentPlayerDbLogs();
+
+        const missing = localLogs.filter(item => !dbHasMatchingSession(item));
+
+        if (!missing.length) {
+          localStorage.setItem(migrationKey, "true");
+          setMigrationNotice("Training history is already synced.");
+          setTimeout(() => setMigrationNotice("", false), 2500);
+          return;
+        }
+
+        setMigrationNotice(`Found ${missing.length} older session${missing.length === 1 ? "" : "s"}. Syncing to the database...`);
+
+        const playerId = await ensurePlayer();
+        const rows = missing.map(item => ({
+          player_id: playerId,
+          topic: item.topic,
+          challenge_name: item.isBonus ? item.topic : null,
+          stars_earned: item.stars || 1,
+          notes: item.notes || null,
+          completed_at: item.date || new Date().toISOString()
+        }));
+
+        const { error } = await supabaseClient.from("training_logs").insert(rows);
+        if (error) throw error;
+
+        localStorage.setItem(migrationKey, "true");
+        setMigrationNotice(`Synced ${missing.length} older session${missing.length === 1 ? "" : "s"} to the database.`);
+        await loadCurrentPlayerDbLogs();
+        setTimeout(() => setMigrationNotice("", false), 3500);
+      } catch (err) {
+        console.error(err);
+        setMigrationNotice("Could not finish syncing older local sessions. Your local data is still on this device.");
+      }
+    }
+
+
+    function setSyncStatus(message) {
+      const el = document.getElementById("syncStatus");
+      if (el) el.textContent = message;
+    }
+
+    function initSupabase() {
+      const HARDCODED_SUPABASE_URL = "https://squcmdsivnnxzblsfciu.supabase.co";
+      const HARDCODED_SUPABASE_KEY = "sb_publishable_pumFxQJ7pYyRC8lrjSvtZA_x63TVYtq";
+      const url = HARDCODED_SUPABASE_URL;
+      const key = HARDCODED_SUPABASE_KEY;
+      const urlInput = document.getElementById("supabaseUrl");
+      const keyInput = document.getElementById("supabaseKey");
+      if (urlInput) urlInput.value = url;
+      if (keyInput) keyInput.value = key;
+      if (url && key && window.supabase) {
+        supabaseClient = window.supabase.createClient(url, key);
+        setSyncStatus("Supabase configured. Save a player name, then complete sessions to sync stats.");
+      }
+    }
+
+    function toggleSupabaseSetup() {
+      document.getElementById("supabaseSetup").classList.toggle("hidden");
+    }
+
+
+    function hideAllStatsPanels() {
+      ["leaderboardPanel", "playerProfilePanel", "monthlyChallengePanel", "hallOfFamePanel"].forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) panel.classList.add("hidden");
+      });
+
+      ["tabLeaderboard", "tabMyStats", "tabTeamGoal", "tabHallOfFame"].forEach(id => {
+        const button = document.getElementById(id);
+        if (button) button.classList.remove("active-tab");
+      });
+    }
+
+    function showStatsPanel(panelId, loadFn, button) {
+      const panel = document.getElementById(panelId);
+      const wasOpen = panel && !panel.classList.contains("hidden");
+
+      hideAllStatsPanels();
+
+      if (wasOpen) return;
+
+      if (panel) {
+        panel.classList.remove("hidden");
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      if (button) button.classList.add("active-tab");
+      if (typeof loadFn === "function") loadFn();
+    }
+
+    function toggleLeaderboard() {
+      showStatsPanel("leaderboardPanel", loadLeaderboard, document.getElementById("tabLeaderboard"));
+    }
+
+    function saveSupabaseConfig() {
+      localStorage.setItem("supabaseUrl", document.getElementById("supabaseUrl").value.trim());
+      localStorage.setItem("supabaseKey", document.getElementById("supabaseKey").value.trim());
+      initSupabase();
+      alert("Supabase settings saved.");
+    }
+
+    async function ensureTeam() {
+      if (!supabaseClient) return null;
+      if (currentTeamId) return currentTeamId;
+      let { data } = await supabaseClient.from("teams").select("id").eq("name", DEFAULT_TEAM_NAME).limit(1).maybeSingle();
+      if (!data) {
+        const res = await supabaseClient.from("teams").insert({ name: DEFAULT_TEAM_NAME }).select("id").single();
+        if (res.error) throw res.error;
+        data = res.data;
+      }
+      currentTeamId = data.id;
+      localStorage.setItem("supabaseTeamId", currentTeamId);
+      return currentTeamId;
+    }
+
+    async function ensurePlayer() {
+      if (!supabaseClient) return null;
+      const name = titleCaseName(localStorage.getItem("playerName") || document.getElementById("playerName").value);
+      if (!name) throw new Error("Enter a player name first.");
+      const teamId = await ensureTeam();
+      let { data } = await supabaseClient.from("players").select("id,name").eq("team_id", teamId).ilike("name", name).limit(1).maybeSingle();
+      if (!data) {
+        const res = await supabaseClient.from("players").insert({ team_id: teamId, name }).select("id,name").single();
+        if (res.error) throw res.error;
+        data = res.data;
+      }
+      currentPlayerId = data.id;
+      localStorage.setItem("supabasePlayerId", currentPlayerId);
+      return currentPlayerId;
+    }
+
+    async function syncTrainingLogItem(item) {
+      if (!supabaseClient) return;
+      try {
+        const playerId = await ensurePlayer();
+        const { data, error } = await supabaseClient.from("training_logs").insert({
+          player_id: playerId,
+          topic: item.topic,
+          challenge_name: item.isBonus ? item.topic : null,
+          stars_earned: item.stars || 1,
+          notes: item.notes || null,
+          completed_at: item.date || new Date().toISOString()
+        }).select("id,player_id,topic,stars_earned,completed_at,notes,challenge_name").single();
+        if (error) throw error;
+        if (data) {
+          currentPlayerDbLogs = [data, ...currentPlayerDbLogs];
+          currentPlayerDbLoaded = true;
+        }
+        setSyncStatus("Latest session synced to Supabase.");
+      } catch (err) {
+        console.error(err);
+        setSyncStatus("Local session saved, but Supabase sync failed: " + err.message);
+      }
+    }
+
+
+    function getSoccerWeekRange(date = new Date()) {
+      const start = new Date(date);
+      start.setHours(0,0,0,0);
+      start.setDate(start.getDate() - start.getDay()); // Sunday start
+      const end = new Date(start);
+      end.setDate(start.getDate() + 7);
+      return { start, end };
+    }
+
+    function getMonthRange(date = new Date()) {
+      const start = new Date(date.getFullYear(), date.getMonth(), 1);
+      const end = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+      return { start, end };
+    }
+
+    function formatShortDate(value) {
+      if (!value) return "—";
+      return new Date(value).toLocaleDateString([], { month: "short", day: "numeric" });
+    }
+
+    function topicCounts(logs) {
+      const counts = {};
+      logs.forEach(l => counts[l.topic] = (counts[l.topic] || 0) + 1);
+      return counts;
+    }
+
+    function favoriteTopicFromLogs(logs) {
+      const counts = topicCounts(logs.filter(l => !l.challenge_name));
+      return Object.entries(counts).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "—";
+    }
+
+    async function fetchTeamPlayersAndLogs(limit = 500) {
+      const teamId = await ensureTeam();
+      const { data: players, error: playersError } = await supabaseClient
+        .from("players")
+        .select("id,name,team_id,created_at")
+        .eq("team_id", teamId)
+        .order("name", { ascending: true });
+      if (playersError) throw playersError;
+
+      const playerIds = (players || []).map(p => p.id);
+      if (!playerIds.length) return { teamId, players: [], logs: [] };
+
+      const { data: logs, error: logsError } = await supabaseClient
+        .from("training_logs")
+        .select("id,player_id,topic,stars_earned,completed_at,notes,challenge_name")
+        .in("player_id", playerIds)
+        .order("completed_at", { ascending: false })
+        .limit(limit);
+      if (logsError) throw logsError;
+      return { teamId, players: players || [], logs: logs || [] };
+    }
+
+
+    function updateLastWeekWinner(players, logs) {
+      const el = document.getElementById("lastWeekWinner");
+      if (!el) return;
+      const { start } = getSoccerWeekRange();
+      const lastStart = new Date(start);
+      lastStart.setDate(start.getDate() - 7);
+      const lastEnd = new Date(start);
+      const byPlayer = {};
+      players.forEach(p => byPlayer[p.id] = { name: p.name, stars: 0, sessions: 0 });
+      logs.forEach(l => {
+        const d = new Date(l.completed_at);
+        if (d >= lastStart && d < lastEnd && byPlayer[l.player_id]) {
+          byPlayer[l.player_id].stars += l.stars_earned || 0;
+          byPlayer[l.player_id].sessions += 1;
+        }
+      });
+      const winner = Object.values(byPlayer).sort((a,b) => b.stars - a.stars || b.sessions - a.sessions || a.name.localeCompare(b.name))[0];
+      if (!winner || winner.stars <= 0) {
+        el.innerHTML = `<b>🏆 Last Week Winner</b><span>No winner yet from last week. Keep logging sessions!</span>`;
+        return;
+      }
+      el.innerHTML = `<b>🏆 Last Week Winner: ${winner.name}</b><span>⭐ ${winner.stars} star${winner.stars === 1 ? "" : "s"} · ${winner.sessions} session${winner.sessions === 1 ? "" : "s"}</span>`;
+    }
+
+    async function loadLeaderboard() {
+      const list = document.getElementById("leaderboardList");
+      if (!list) return;
+      if (!supabaseClient) {
+        list.innerHTML = `<div class="empty">Database sync is not configured on this device yet. Local stats will still work.</div>`;
+        return;
+      }
+      try {
+        const { players, logs } = await fetchTeamPlayersAndLogs(500);
+        updateLastWeekWinner(players, logs);
+        const { start, end } = getSoccerWeekRange();
+        const currentLogs = logs.filter(l => {
+          const d = new Date(l.completed_at);
+          return d >= start && d < end;
+        });
+
+        const byPlayer = {};
+        players.forEach(p => byPlayer[p.id] = { name: p.name, stars: 0, sessions: 0 });
+        currentLogs.forEach(l => {
+          if (!byPlayer[l.player_id]) return;
+          byPlayer[l.player_id].stars += l.stars_earned || 0;
+          byPlayer[l.player_id].sessions += 1;
+        });
+
+        const rows = Object.values(byPlayer)
+          .filter(r => r.sessions > 0 || r.stars > 0)
+          .sort((a,b) => b.stars - a.stars || b.sessions - a.sessions || a.name.localeCompare(b.name));
+
+        if (!rows.length) {
+          list.innerHTML = `<div class="empty">No leaderboard stats yet for this Sunday → Saturday week. Log a session to get started.</div>`;
+          return;
+        }
+
+        list.innerHTML = rows.map((row, idx) => {
+          const rank = idx + 1;
+          const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank;
+          return `<div class="leaderboard-row"><b>${medal}</b><div><b>${row.name}</b><br><small>${row.sessions} session${row.sessions === 1 ? "" : "s"} this week</small></div><b>⭐ ${row.stars}</b><small>Rank ${rank}</small></div>`;
+        }).join("");
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = `<div class="empty">Could not load leaderboard: ${err.message}</div>`;
+      }
+    }
+
+    function togglePlayerProfile() {
+      showStatsPanel("playerProfilePanel", loadPlayerProfile, document.getElementById("tabMyStats"));
+    }
+
+    function toggleTeamChallenge() {
+      showStatsPanel("monthlyChallengePanel", loadMonthlyChallenge, document.getElementById("tabTeamGoal"));
+    }
+
+    function toggleHallOfFame() {
+      showStatsPanel("hallOfFamePanel", loadHallOfFame, document.getElementById("tabHallOfFame"));
+    }
+
+    async function loadPlayerProfile() {
+      const recentEl = document.getElementById("profileRecentSessions");
+      const savedName = titleCaseName(localStorage.getItem("playerName") || document.getElementById("playerName").value);
+      if (!savedName) {
+        recentEl.innerHTML = `<div class="empty">Type a player name and click Save first.</div>`;
+        return;
+      }
+      if (!supabaseClient) {
+        recentEl.innerHTML = `<div class="empty">Database is not connected.</div>`;
+        return;
+      }
+      try {
+        await loadCurrentPlayerDbLogs();
+        const mine = currentPlayerDbLogs;
+        if (!currentPlayerId && !mine.length) {
+          recentEl.innerHTML = `<div class="empty">No database profile found yet for ${savedName}. Complete a session to create one.</div>`;
+          return;
+        }
+        const stars = mine.reduce((s,l) => s + (l.stars_earned || 0), 0);
+        const trainingSessions = mine.filter(l => !l.challenge_name).length;
+        document.getElementById("profileSessions").textContent = trainingSessions;
+        document.getElementById("profileMinutes").textContent = trainingSessions * 20;
+        document.getElementById("profileStreak").textContent = calculateDatabaseStreak(mine);
+        document.getElementById("profileFavorite").textContent = favoriteTopicFromLogs(mine);
+        const starsText = document.getElementById("profileStarsText");
+        if (starsText) starsText.textContent = `⭐ ${stars} Star${stars === 1 ? "" : "s"}`;
+        recentEl.innerHTML = mine.slice(0,10).map(l => {
+          const d = new Date(l.completed_at);
+          return `<div class="profile-row"><b>${l.topic} · ⭐ ${l.stars_earned || 0}</b><br><small>${d.toLocaleDateString()} at ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>${l.notes ? `<p style="margin:7px 0 0;color:var(--muted)">${l.notes}</p>` : ""}</div>`;
+        }).join("") || `<div class="empty">No sessions yet.</div>`;
+      } catch (err) {
+        recentEl.innerHTML = `<div class="empty">Could not load profile: ${err.message}</div>`;
+      }
+    }
+
+    async function loadMonthlyChallenge() {
+      if (!supabaseClient) return;
+      try {
+        const { logs } = await fetchTeamPlayersAndLogs(1000);
+        const { start, end } = getMonthRange();
+        const monthLogs = logs.filter(l => {
+          const d = new Date(l.completed_at);
+          return d >= start && d < end && !l.challenge_name;
+        });
+        const goal = 50;
+        const count = monthLogs.length;
+        const pct = Math.min(Math.round((count / goal) * 100), 100);
+        document.getElementById("monthlyChallengeText").textContent = `${count} / ${goal} team sessions this month`;
+        document.getElementById("monthlyChallengePercent").textContent = `${pct}%`;
+        document.getElementById("monthlyChallengeFill").style.width = `${pct}%`;
+      } catch (err) {
+        document.getElementById("monthlyChallengeText").textContent = `Could not load monthly challenge`;
+      }
+    }
+
+    async function loadHallOfFame() {
+      const el = document.getElementById("hallOfFameList");
+      if (!supabaseClient) return;
+      try {
+        const { players, logs } = await fetchTeamPlayersAndLogs(1000);
+        const byPlayer = {};
+        players.forEach(p => byPlayer[p.id] = { name: p.name, stars: 0, sessions: 0 });
+        logs.forEach(l => {
+          if (!byPlayer[l.player_id]) return;
+          byPlayer[l.player_id].stars += l.stars_earned || 0;
+          byPlayer[l.player_id].sessions += 1;
+        });
+        const rows = Object.values(byPlayer);
+        const mostStars = rows.slice().sort((a,b) => b.stars - a.stars)[0];
+        const mostSessions = rows.slice().sort((a,b) => b.sessions - a.sessions)[0];
+        const topics = topicCounts(logs.filter(l => !l.challenge_name));
+        const topTopic = Object.entries(topics).sort((a,b) => b[1] - a[1])[0];
+        const recent = logs[0];
+        el.innerHTML = `
+          <div class="hof-row"><b>🏆 Most Stars Ever</b><br><small>${mostStars?.name || "—"} · ⭐ ${mostStars?.stars || 0}</small></div>
+          <div class="hof-row"><b>🔥 Most Sessions</b><br><small>${mostSessions?.name || "—"} · ${mostSessions?.sessions || 0} sessions</small></div>
+          <div class="hof-row"><b>⚽ Most Popular Topic</b><br><small>${topTopic ? `${topTopic[0]} · ${topTopic[1]} sessions` : "—"}</small></div>
+          <div class="hof-row"><b>🕒 Latest Training</b><br><small>${recent ? `${formatShortDate(recent.completed_at)}` : "—"}</small></div>
+        `;
+      } catch (err) {
+        el.innerHTML = `<div class="empty">Could not load Hall of Fame: ${err.message}</div>`;
+      }
+    }
+
+
+    function renderCoachChallengeEditor() {
+      const nameInput = document.getElementById("coachChallengeName");
+      const rewardInput = document.getElementById("coachChallengeReward");
+      const taskWrap = document.getElementById("challengeEditorTasks");
+      if (!nameInput || !rewardInput || !taskWrap) return;
+      nameInput.value = weeklyChallenge.name || "";
+      rewardInput.value = weeklyChallenge.rewardStars || 5;
+      const topicOptions = Object.keys(plans).map(topic => `<option value="${topic}">${topic}</option>`).join("");
+      const tasks = [...weeklyChallenge.tasks];
+      while (tasks.length < 3) tasks.push({ topic: "Ball Mastery", target: 1 });
+      taskWrap.innerHTML = tasks.slice(0, 3).map((task, index) => `
+        <label>Task ${index + 1} Topic
+          <select id="challengeTopic${index}">${topicOptions}</select>
+        </label>
+        <label>Target Sessions
+          <input id="challengeTarget${index}" type="number" min="1" max="10" value="${task.target || 1}" />
+        </label>
+        <label>Status
+          <input value="Players complete this task" disabled />
+        </label>
+      `).join("");
+      tasks.slice(0, 3).forEach((task, index) => {
+        const select = document.getElementById(`challengeTopic${index}`);
+        if (select) select.value = task.topic;
+      });
+    }
+
+    function saveCoachChallenge() {
+      const name = document.getElementById("coachChallengeName")?.value.trim() || "Coach Michael's Weekly Challenge";
+      const rewardStars = Math.max(1, parseInt(document.getElementById("coachChallengeReward")?.value || "5", 10));
+      const tasks = [0,1,2].map(index => ({
+        topic: document.getElementById(`challengeTopic${index}`)?.value || "Ball Mastery",
+        target: Math.max(1, parseInt(document.getElementById(`challengeTarget${index}`)?.value || "1", 10))
+      }));
+      weeklyChallenge = {
+        id: `coach-challenge-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "custom"}`,
+        name,
+        description: "Complete this week's mission to earn bonus stars.",
+        rewardStars,
+        tasks
+      };
+      localStorage.setItem("weeklyChallengeConfig", JSON.stringify(weeklyChallenge));
+      localStorage.removeItem(getChallengeRewardKey());
+      renderWeeklyChallenge();
+      renderCoachChallengeEditor();
+      alert("Weekly challenge updated. Players on this device will see the new challenge.");
+    }
+
+    function resetCoachChallengeEditor() {
+      weeklyChallenge = { ...defaultWeeklyChallenge, tasks: [...defaultWeeklyChallenge.tasks] };
+      localStorage.removeItem("weeklyChallengeConfig");
+      localStorage.removeItem(getChallengeRewardKey());
+      renderWeeklyChallenge();
+      renderCoachChallengeEditor();
+      alert("Weekly challenge reset to the default challenge.");
+    }
+
+    function openCoachDashboard() {
+      const code = prompt("Enter coach code");
+      if (code !== "2121") {
+        alert("Incorrect coach code.");
+        return;
+      }
+      const panel = document.getElementById("coachDashboard");
+      panel.classList.remove("hidden");
+      renderCoachChallengeEditor();
+      panel.scrollIntoView({ behavior: "smooth" });
+      loadCoachDashboard();
+    }
+
+    async function loadCoachDashboard() {
+      const statsEl = document.getElementById("coachPlayerStats");
+      const recentEl = document.getElementById("coachRecentSessions");
+      const chartsEl = document.getElementById("coachCharts");
+      if (!supabaseClient) {
+        statsEl.innerHTML = `<div class="empty">Database is not connected.</div>`;
+        return;
+      }
+      try {
+        const { players, logs } = await fetchTeamPlayersAndLogs(1000);
+
+        const byPlayer = {};
+        (players || []).forEach(p => {
+          byPlayer[p.id] = { id: p.id, name: p.name, sessions: 0, stars: 0, last: null, topics: {} };
+        });
+
+        (logs || []).forEach(l => {
+          if (!byPlayer[l.player_id]) return;
+          byPlayer[l.player_id].sessions += 1;
+          byPlayer[l.player_id].stars += l.stars_earned || 0;
+          byPlayer[l.player_id].last = byPlayer[l.player_id].last || l.completed_at;
+          if (!l.challenge_name) byPlayer[l.player_id].topics[l.topic] = (byPlayer[l.player_id].topics[l.topic] || 0) + 1;
+        });
+
+        const rows = Object.values(byPlayer).sort((a,b) => b.stars - a.stars || b.sessions - a.sessions || a.name.localeCompare(b.name));
+        const active = rows.filter(r => r.sessions > 0).length;
+        document.getElementById("coachTotalPlayers").textContent = rows.length;
+        document.getElementById("coachTotalSessions").textContent = rows.reduce((s,r) => s + r.sessions, 0);
+        document.getElementById("coachTotalStars").textContent = rows.reduce((s,r) => s + r.stars, 0);
+        document.getElementById("coachActivePlayers").textContent = active;
+
+        if (!rows.length) {
+          statsEl.innerHTML = `<div class="empty">No players yet.</div>`;
+        } else {
+          statsEl.innerHTML = rows.map(r => {
+            const fav = Object.entries(r.topics).sort((a,b) => b[1] - a[1])[0]?.[0] || "—";
+            const last = r.last ? new Date(r.last).toLocaleDateString() : "No sessions";
+            return `<div class="coach-row"><div><b>${r.name}</b><br><small>Favorite: ${fav}</small></div><div><b>⭐ ${r.stars}</b><br><small>stars</small></div><div><b>${r.sessions}</b><br><small>sessions</small></div><div><b>${last}</b><br><small>last session</small></div></div>`;
+          }).join("");
+        }
+
+        const playerNames = Object.fromEntries((players || []).map(p => [p.id, p.name]));
+        const recent = (logs || []).filter(l => playerNames[l.player_id]).slice(0, 20);
+        recentEl.innerHTML = recent.length ? recent.map(l => {
+          const d = new Date(l.completed_at);
+          return `<div class="coach-row"><div><b>${playerNames[l.player_id]}</b><br><small>${l.topic}</small></div><div><b>⭐ ${l.stars_earned || 0}</b><br><small>stars</small></div><div><b>${d.toLocaleDateString()}</b><br><small>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small></div><div><small>${l.notes || ""}</small></div></div>`;
+        }).join("") : `<div class="empty">No sessions logged yet.</div>`;
+
+        const topPlayers = rows.slice(0,5);
+        const maxStars = Math.max(...topPlayers.map(r => r.stars), 1);
+        const topics = topicCounts(logs.filter(l => !l.challenge_name));
+        const topTopics = Object.entries(topics).sort((a,b) => b[1] - a[1]).slice(0,5);
+        const maxTopic = Math.max(...topTopics.map(x => x[1]), 1);
+        chartsEl.innerHTML = `
+          <div class="chart-row"><b>Stars by Player</b>${topPlayers.map(r => `<div style="margin-top:10px;"><small>${r.name} · ⭐ ${r.stars}</small><div class="chart-bar"><div class="chart-bar-fill" style="width:${Math.round((r.stars / maxStars) * 100)}%"></div></div></div>`).join("") || `<br><small>No data yet.</small>`}</div>
+          <div class="chart-row"><b>Most Popular Topics</b>${topTopics.map(t => `<div style="margin-top:10px;"><small>${t[0]} · ${t[1]} sessions</small><div class="chart-bar"><div class="chart-bar-fill" style="width:${Math.round((t[1] / maxTopic) * 100)}%"></div></div></div>`).join("") || `<br><small>No data yet.</small>`}</div>
+        `;
+      } catch (err) {
+        console.error(err);
+        statsEl.innerHTML = `<div class="empty">Could not load coach dashboard: ${err.message}</div>`;
+      }
+    }
+
+    const plans = {
+      "Ball Mastery": {
+        emoji: "🔥",
+        description: "Touches, control, quick feet",
+        steps: [
+          ["Warm-Up Touches", "Toe taps, foundations, sole rolls. Keep your knees bent and touches light.", 5],
+          ["Control Moves", "Pull-pushes, V-pulls, inside-outside touches. Use both feet.", 5],
+          ["Skill Moves", "Scissors, stepovers, drag backs. Start smooth, then increase speed.", 5],
+          ["Speed Challenge", "30 seconds fast / 30 seconds rest. Count clean touches and beat your score.", 5]
+        ]
+      },
+      "Passing & Receiving": {
+        emoji: "🎯",
+        description: "Wall work and first touch",
+        steps: [
+          ["Two-Touch Passing", "Pass against a wall. First touch across your body, second touch pass.", 5],
+          ["Inside Foot Accuracy", "Aim for a small target. Lock your ankle and pass cleanly.", 5],
+          ["Receive and Turn", "First touch away from pressure, open hips, then pass.", 5],
+          ["Weak Foot Reps", "Use only your weaker foot. Quality over power.", 5]
+        ]
+      },
+      "1v1 Moves": {
+        emoji: "⚡",
+        description: "Confidence beating defenders",
+        steps: [
+          ["Body Feints", "Drop your shoulder, sell the fake, explode the other way.", 5],
+          ["Scissors + Burst", "Scissors around the ball, then push into space.", 5],
+          ["Change of Direction", "Drag back, Cruyff turn, inside cut, outside cut.", 5],
+          ["Game Speed Combo", "Pick two moves and do them at speed with a burst after each.", 5]
+        ]
+      },
+      "Shooting": {
+        emoji: "🚀",
+        description: "Technique and finishing",
+        steps: [
+          ["Striking Form", "Plant foot beside ball, toe down, ankle locked, follow through.", 5],
+          ["Corners Challenge", "Aim low corners. Track how many hit the target.", 5],
+          ["First-Time Finish", "Roll the ball forward and strike with limited touches.", 5],
+          ["Power + Accuracy", "Alternate one power shot, one placed shot.", 5]
+        ]
+      },
+      "Weak Foot": {
+        emoji: "🦶",
+        description: "Build your other foot",
+        steps: [
+          ["Weak Foot Touches", "Foundations, toe taps, rollovers mostly with weak foot.", 5],
+          ["Weak Foot Passing", "Use a wall or partner. Keep passes clean and controlled.", 5],
+          ["Weak Foot Dribbling", "Small-space dribbles using mostly weak foot.", 5],
+          ["Weak Foot Challenge", "Combine dribble, pass, receive, and turn.", 5]
+        ]
+      },
+      "First Touch": {
+        emoji: "🧠",
+        description: "Prepare the next play",
+        steps: [
+          ["Cushion Touch", "Receive softly. Make the ball stop close to you.", 5],
+          ["Touch Across Body", "First touch moves the ball to your next action.", 5],
+          ["Directional Touch", "Touch left, right, forward, and backward on command.", 5],
+          ["Game-Like Reps", "Receive, scan, turn, pass. Repeat with pace.", 5]
+        ]
+      },
+      "Speed & Agility": {
+        emoji: "💨",
+        description: "NEW · Quick feet, balance, bursts",
+        isNew: true,
+        steps: [
+          ["Quick Feet Warm-Up", "Basement or yard: jog in place, high knees, side shuffles, and fast feet for 30 seconds each. Stay light on your toes.", 5],
+          ["Ladder Without a Ladder", "Use floor lines, cones, shoes, or tape. Do two-feet-in, side steps, in-in-out-out, and quick hops. Focus on rhythm and control.", 5],
+          ["Change of Direction", "Set up 2 shoes or cones 5-8 yards apart. Sprint, stop under control, shuffle back, then backpedal. Keep knees bent and chest up.", 5],
+          ["Burst Challenge", "Start low like you're about to defend. Explode for 3-5 steps, slow down under control, reset, and repeat. Track your best clean reps.", 5]
+        ]
+      },
+      "Fast Feet": {
+        emoji: "⏱️",
+        description: "NEW · 30-second ball mastery records",
+        isNew: true,
+        steps: [
+          ["Fast Feet Warm-Up", "Complete 50 toe taps, 50 foundations (tic-tocs), and 50 scissors. Take a short break between each exercise and focus on clean technique before speed.", 5],
+          ["Toe Tap Record", "Set a 30-second timer. Do as many clean toe taps as you can. Rest 30 seconds, then try to beat your score.", 3],
+          ["Foundation Record", "Set a 30-second timer. Do as many foundations as you can while keeping the ball under control. Rest, then repeat.", 3],
+          ["Scissors Record", "Set a 30-second timer. Do as many clean scissors as you can. Rest 30 seconds, then try to beat your score.", 3],
+          ["Champion Round", "Pick your best score from toe taps, foundations, or scissors. Try to beat it. Record your best score in the Fast Feet Personal Records section below.", 5]
+        ]
+      },
+      "Juggling - Beginner": {
+        emoji: "🪀",
+        description: "NEW · Bounce, laces, catch",
+        isNew: true,
+        steps: [
+          ["Strong Foot Bounce + Catch", "Bounce the ball once, kick it up with your strong foot laces, and catch it with your hands. Try for soft, controlled touches.", 5],
+          ["Weak Foot Bounce + Catch", "Now use your weak foot. Bounce the ball once, kick it up with your laces, and catch it. Keep your ankle locked and toe pointed slightly down.", 5],
+          ["Switch Feet Pattern", "Bounce, strong foot laces to hands. Bounce, weak foot laces to hands. Keep switching feet and count your clean reps.", 5],
+          ["Reduce the Spin Challenge", "Use your laces and try to make the ball come up with less spin. A clean touch should float up softly and be easy to catch.", 5]
+        ]
+      }
+    };
+
+
+
+    const defaultWeeklyChallenge = {
+      id: "coach-michael-week-1",
+      name: "Coach Michael's Weekly Challenge",
+      description: "Complete this week's mission to earn bonus stars.",
+      rewardStars: 5,
+      tasks: [
+        { topic: "Fast Feet", target: 2 },
+        { topic: "Speed & Agility", target: 1 },
+        { topic: "Weak Foot", target: 2 }
+      ]
+    };
+
+    function getSavedWeeklyChallenge() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("weeklyChallengeConfig") || "null");
+        if (!saved || !Array.isArray(saved.tasks)) return { ...defaultWeeklyChallenge, tasks: [...defaultWeeklyChallenge.tasks] };
+        return {
+          ...defaultWeeklyChallenge,
+          ...saved,
+          tasks: saved.tasks.filter(t => t.topic && Number(t.target) > 0).map(t => ({ topic: t.topic, target: Number(t.target) }))
+        };
+      } catch (e) {
+        return { ...defaultWeeklyChallenge, tasks: [...defaultWeeklyChallenge.tasks] };
+      }
+    }
+
+    let weeklyChallenge = getSavedWeeklyChallenge();
+
+    function getChallengeRewardKey() {
+      return `challengeReward_${weeklyChallenge.id}`;
+    }
+
+    function getChallengeCounts(log) {
+      const counts = {};
+      weeklyChallenge.tasks.forEach(task => {
+        counts[task.topic] = log.filter(item => item.topic === task.topic).length;
+      });
+      return counts;
+    }
+
+    function getChallengeProgress(log) {
+      const counts = getChallengeCounts(log);
+      let completed = 0;
+      let target = 0;
+
+      weeklyChallenge.tasks.forEach(task => {
+        completed += Math.min(counts[task.topic] || 0, task.target);
+        target += task.target;
+      });
+
+      return {
+        counts,
+        completed,
+        target,
+        percent: target ? Math.round((completed / target) * 100) : 0,
+        isComplete: completed >= target
+      };
+    }
+
+    function awardChallengeRewardIfEarned(log) {
+      const progress = getChallengeProgress(log.filter(item => !item.isBonus));
+      const rewardKey = getChallengeRewardKey();
+
+      if (!progress.isComplete || localStorage.getItem(rewardKey)) {
+        return false;
+      }
+
+      log.unshift({
+        player: localStorage.getItem("playerName") || document.getElementById("playerName").value || "Player",
+        topic: "Coach Michael Weekly Challenge Bonus",
+        minutes: 0,
+        stars: weeklyChallenge.rewardStars,
+        xp: 0,
+        notes: `Completed this week's challenge: ${weeklyChallenge.tasks.map(t => `${t.target} ${t.topic}`).join(", ")}.`,
+        date: new Date().toISOString(),
+        isBonus: true
+      });
+
+      localStorage.setItem(rewardKey, "true");
+      addChallengeHistoryIfNeeded();
+      return true;
+    }
+
+    function updateWeeklyChallengeHeader() {
+      const title = document.getElementById("weeklyChallengeTitle");
+      const desc = document.getElementById("weeklyChallengeDescription");
+      const reward = document.getElementById("weeklyChallengeReward");
+      if (title) title.textContent = `⚡ ${weeklyChallenge.name || "Weekly Challenge"}`;
+      if (desc) desc.textContent = weeklyChallenge.description || "Complete this week's mission to earn bonus stars.";
+      if (reward) reward.textContent = `Reward: ${"⭐".repeat(Math.min(weeklyChallenge.rewardStars || 5, 10))}${weeklyChallenge.rewardStars > 10 ? ` +${weeklyChallenge.rewardStars}` : ""}`;
+    }
+
+
+
+
+
+
+    function getChallengeTaskHtml(task, count) {
+      const capped = Math.min(count || 0, task.target);
+      const pct = Math.round((capped / task.target) * 100);
+      const done = capped >= task.target;
+
+      return `
+        <div class="challenge-task" role="button" tabindex="0" data-topic="${task.topic}" onclick="startChallengeTopic('${task.topic}')">
+          <div class="challenge-task-top">
+            <div>
+              <b>${done ? "✅" : "⬜"} ${task.topic}</b>
+              <span>${capped} / ${task.target} sessions complete · Tap Start to open session</span>
+            </div>
+            <div class="pill">${pct}%</div>
+          </div>
+          <div class="mini-progress">
+            <div class="mini-progress-fill" style="width:${pct}%"></div>
+          </div>
+          <button type="button" class="secondary" style="margin-top:12px;width:100%;" onclick="event.stopPropagation(); startChallengeTopic('${task.topic}')">
+            Start ${task.topic}
+          </button>
+        </div>
+      `;
+    }
+
+
+
+    function startChallengeTopic(topic) {
+      if (!plans[topic]) {
+        alert("That training topic is not available yet.");
+        return;
+      }
+
+      showPlan(topic);
+
+      setTimeout(() => {
+        const planCard = document.getElementById("planCard");
+        if (planCard) {
+          planCard.classList.remove("hidden");
+          planCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 150);
+    }
+
+    function renderWeeklyChallenge() {
+      updateWeeklyChallengeHeader();
+      const log = getLog().filter(item => !item.isBonus);
+      const progress = getChallengeProgress(log);
+
+      const list = document.getElementById("challengeList");
+      if (!list) return;
+
+      list.innerHTML = weeklyChallenge.tasks.map(task => {
+        const count = progress.counts[task.topic] || 0;
+        return getChallengeTaskHtml(task, count);
+      }).join("");
+
+
+      document.getElementById("challengeProgressText").textContent =
+        `${progress.completed} / ${progress.target} challenge sessions complete`;
+      document.getElementById("challengePercentText").textContent = `${progress.percent}%`;
+      document.getElementById("challengeFill").style.width = `${progress.percent}%`;
+
+      const complete = document.getElementById("challengeComplete");
+      if (complete) {
+        complete.classList.toggle("show", progress.isComplete);
+      }
+
+      renderChallengeHistory();
+    }
+
+
+    async function refreshWeeklyChallengeFromDatabase() {
+      const list = document.getElementById("challengeList");
+      if (!list || !supabaseClient) return;
+
+      const name = getCurrentPlayerName();
+      if (!name || name === "Player") return;
+
+      try {
+        await loadCurrentPlayerDbLogs();
+
+        const logs = currentPlayerDbLogs
+          .filter(item => !item.challenge_name)
+          .map(item => ({
+            topic: item.topic,
+            date: item.completed_at,
+            isBonus: false
+          }));
+
+        const counts = {};
+        weeklyChallenge.tasks.forEach(task => {
+          const targetTopic = (task.topic || "").trim().toLowerCase();
+          counts[task.topic] = logs.filter(item => (item.topic || "").trim().toLowerCase() === targetTopic).length;
+        });
+
+        let completed = 0;
+        let target = 0;
+        weeklyChallenge.tasks.forEach(task => {
+          completed += Math.min(counts[task.topic] || 0, task.target);
+          target += task.target;
+        });
+
+        const percent = target ? Math.round((completed / target) * 100) : 0;
+        const isComplete = completed >= target;
+
+        list.innerHTML = weeklyChallenge.tasks.map(task => {
+          const count = counts[task.topic] || 0;
+          return getChallengeTaskHtml(task, count);
+        }).join("");
+
+        document.getElementById("challengeProgressText").textContent =
+          `${completed} / ${target} challenge sessions complete`;
+        document.getElementById("challengePercentText").textContent = `${percent}%`;
+        document.getElementById("challengeFill").style.width = `${percent}%`;
+
+        const complete = document.getElementById("challengeComplete");
+        if (complete) complete.classList.toggle("show", isComplete);
+
+        const source = document.getElementById("challengeSourceText");
+        if (source) source.textContent = `Challenge progress loaded from Supabase for ${name}.`;
+
+        renderChallengeHistory();
+      } catch (err) {
+        console.error(err);
+        const source = document.getElementById("challengeSourceText");
+        if (source) source.textContent = "Could not refresh challenge progress from Supabase.";
+      }
+    }
+
+
+
+    const levels = [
+      { name: "Rookie", xp: 0 },
+      { name: "Bronze", xp: 500 },
+      { name: "Silver", xp: 1500 },
+      { name: "Gold", xp: 3000 },
+      { name: "Elite", xp: 5000 },
+      { name: "Future Star", xp: 7500 }
+    ];
+
+    const badgeRules = [
+      { id: "first", icon: "🌟", name: "First Star", desc: "Complete 1 session", check: log => log.length >= 1 },
+      { id: "three", icon: "🔥", name: "On Fire", desc: "Complete 3 sessions", check: log => log.length >= 3 },
+      { id: "ten", icon: "🏅", name: "Training Machine", desc: "Complete 10 sessions", check: log => log.length >= 10 },
+      { id: "ball", icon: "🪄", name: "Ball Wizard", desc: "5 Ball Mastery sessions", check: log => log.filter(x => x.topic === "Ball Mastery").length >= 5 },
+      { id: "passing", icon: "🎯", name: "Passing Pro", desc: "5 passing sessions", check: log => log.filter(x => x.topic === "Passing & Receiving").length >= 5 },
+      { id: "speed", icon: "💨", name: "Speedster", desc: "5 Speed & Agility sessions", check: log => log.filter(x => x.topic === "Speed & Agility").length >= 5 },
+      { id: "fastfeet", icon: "⏱️", name: "Fast Feet Champ", desc: "5 Fast Feet sessions", check: log => log.filter(x => x.topic === "Fast Feet").length >= 5 },
+      { id: "juggling", icon: "🪀", name: "Juggling Starter", desc: "5 beginner juggling sessions", check: log => log.filter(x => x.topic === "Juggling - Beginner").length >= 5 },
+      { id: "streak", icon: "⚡", name: "3-Day Streak", desc: "Train 3 days in a row", check: log => calculateStreak(log) >= 3 }
+    ];
+
+
+
+    function getFastFeetRecords() {
+      const records = { toeTaps: 0, foundations: 0, scissors: 0 };
+      const logs = currentPlayerDbLoaded ? currentPlayerDbLogs : [];
+      logs.forEach(log => {
+        const notes = log.notes || "";
+        const toe = notes.match(/Toe Taps:\s*(\d+)/i);
+        const foundations = notes.match(/Foundations:\s*(\d+)/i);
+        const scissors = notes.match(/Scissors:\s*(\d+)/i);
+        if (toe) records.toeTaps = Math.max(records.toeTaps, parseInt(toe[1], 10));
+        if (foundations) records.foundations = Math.max(records.foundations, parseInt(foundations[1], 10));
+        if (scissors) records.scissors = Math.max(records.scissors, parseInt(scissors[1], 10));
+      });
+      return records;
+    }
+
+    function setFastFeetRecords(records) {
+      renderFastFeetRecords();
+    }
+
+    function renderFastFeetRecords() {
+      const records = getFastFeetRecords();
+      const toe = document.getElementById("toeTapBest");
+      const foundations = document.getElementById("foundationBest");
+      const scissors = document.getElementById("scissorsBest");
+
+      if (!toe || !foundations || !scissors) return;
+
+      toe.textContent = records.toeTaps || 0;
+      foundations.textContent = records.foundations || 0;
+      scissors.textContent = records.scissors || 0;
+    }
+
+    async function saveFastFeetRecords() {
+      if (!supabaseClient) {
+        alert("Database is not connected yet. Try again in a moment.");
+        return;
+      }
+
+      const records = getFastFeetRecords();
+      const inputs = [
+        { key: "toeTaps", label: "Toe Taps", id: "toeTapScore" },
+        { key: "foundations", label: "Foundations", id: "foundationScore" },
+        { key: "scissors", label: "Scissors", id: "scissorsScore" }
+      ];
+
+      let newRecords = [];
+      inputs.forEach(item => {
+        const input = document.getElementById(item.id);
+        const value = parseInt(input.value || "0", 10);
+
+        if (value > (records[item.key] || 0)) {
+          records[item.key] = value;
+          newRecords.push(`${item.label}: ${value}`);
+        }
+
+        input.value = "";
+      });
+
+      if (newRecords.length) {
+        const item = {
+          player: getCurrentPlayerName(),
+          topic: "Fast Feet Personal Record Bonus",
+          minutes: 0,
+          stars: 2,
+          xp: 0,
+          notes: `New personal record: ${newRecords.join(", ")}`,
+          date: new Date().toISOString(),
+          isBonus: true
+        };
+
+        await syncTrainingLogItem(item);
+        renderFastFeetRecords();
+        renderLog();
+        renderStats();
+        renderGamification();
+        renderWeeklyChallenge();
+        renderChallengeHistory();
+        showStarPop();
+        alert(`🔥 New personal record! You earned ⭐ 2 bonus stars. ${newRecords.join(", ")}`);
+      } else {
+        alert("Records checked. Keep going — try to beat your best next time!");
+      }
+    }
+
+
+    function getChallengeHistory() {
+      return JSON.parse(localStorage.getItem("challengeHistory") || "[]");
+    }
+
+    function setChallengeHistory(history) {
+      localStorage.setItem("challengeHistory", JSON.stringify(history));
+    }
+
+    function addChallengeHistoryIfNeeded() {
+      const history = getChallengeHistory();
+      if (history.some(item => item.id === weeklyChallenge.id)) return;
+
+      history.unshift({
+        id: weeklyChallenge.id,
+        name: "Week 1 · Quick Feet Challenge",
+        reward: "5 bonus stars",
+        completedAt: new Date().toISOString()
+      });
+
+      setChallengeHistory(history);
+    }
+
+    function renderChallengeHistory() {
+      const list = document.getElementById("challengeHistoryList");
+      if (!list) return;
+
+      const dbBonuses = currentPlayerDbLoaded
+        ? currentPlayerDbLogs.filter(item => item.challenge_name || (item.topic || "").includes("Challenge Bonus"))
+        : [];
+
+      if (dbBonuses.length) {
+        list.innerHTML = dbBonuses.slice(0, 5).map(item => {
+          const d = new Date(item.completed_at);
+          return `<div class="challenge-history-item">🏆 ${item.topic} · Complete · ${d.toLocaleDateString()}</div>`;
+        }).join("");
+        return;
+      }
+
+      const history = getChallengeHistory();
+      if (!history.length) {
+        list.innerHTML = `<div class="challenge-history-item">⬜ Week 1 · In Progress</div>`;
+        return;
+      }
+
+      list.innerHTML = history.map(item => {
+        const d = new Date(item.completedAt);
+        return `<div class="challenge-history-item">🏆 ${item.name} · Complete · ${d.toLocaleDateString()}</div>`;
+      }).join("");
+    }
+
+
+    function getTotalXP(log) {
+      return log.reduce((sum, x) => sum + (x.xp || 100), 0);
+    }
+
+    function getStars(log) {
+      return log.reduce((sum, x) => sum + (x.stars || 1), 0);
+    }
+
+    function getCurrentLevel(totalXP) {
+      let current = levels[0];
+      let next = levels[1];
+
+      for (let i = 0; i < levels.length; i++) {
+        if (totalXP >= levels[i].xp) {
+          current = levels[i];
+          next = levels[i + 1] || null;
+        }
+      }
+
+      return { current, next };
+    }
+
+    function calculateStreak(log) {
+      const uniqueDays = [...new Set(log.map(x => new Date(x.date).toDateString()))]
+        .map(x => new Date(x))
+        .sort((a,b) => b - a);
+
+      let streak = 0;
+      let today = new Date();
+      today.setHours(0,0,0,0);
+
+      for (let i = 0; i < uniqueDays.length; i++) {
+        const expected = new Date(today);
+        expected.setDate(today.getDate() - i);
+        if (uniqueDays[i].toDateString() === expected.toDateString()) streak++;
+        else break;
+      }
+
+      return streak;
+    }
+
+    function showStarPop() {
+      const pop = document.getElementById("starPop");
+      pop.classList.remove("show");
+      void pop.offsetWidth;
+      pop.classList.add("show");
+      setTimeout(() => pop.classList.remove("show"), 1500);
+    }
+
+
+    function getLevelNumber(levelName) {
+      const index = levels.findIndex(level => level.name === levelName);
+      return index >= 0 ? index + 1 : 1;
+    }
+
+
+    function renderNextLevelCard(totalXP, level) {
+      const el = document.getElementById("nextLevelText");
+      if (!el) return;
+
+      if (level.next) {
+        const remaining = Math.max(level.next.xp - totalXP, 0);
+        const sessionsNeeded = Math.ceil(remaining / 100);
+        el.textContent = `${remaining} XP needed to reach ${level.next.name}. Fastest path: complete ${sessionsNeeded} training session${sessionsNeeded === 1 ? "" : "s"} or finish this week's challenge.`;
+      } else {
+        el.textContent = "Max level reached. Keep stacking stars, badges, records, and weekly challenges!";
+      }
+    }
+
+
+    function renderGamification() {
+      const log = getUiLogs();
+      const totalXP = getTotalXP(log);
+      const stars = getStars(log);
+      const level = getCurrentLevel(totalXP);
+      renderNextLevelCard(totalXP, level);
+
+      document.getElementById("starText").textContent = `⭐ ${stars} Star${stars === 1 ? "" : "s"}`;
+      document.getElementById("playerLevel").textContent = `Level ${levels.indexOf(level.current) + 1} · ${level.current.name}`;
+
+      const levelNumber = getLevelNumber(level.current.name);
+      const xpRing = document.getElementById("xpRing");
+      const xpRingLevel = document.getElementById("xpRingLevel");
+
+      if (xpRingLevel) xpRingLevel.textContent = levelNumber;
+
+      if (level.next) {
+        const progress = ((totalXP - level.current.xp) / (level.next.xp - level.current.xp)) * 100;
+        const safeProgress = Math.min(progress, 100);
+        document.getElementById("xpText").textContent = `${totalXP} / ${level.next.xp} XP to ${level.next.name}`;
+        document.getElementById("xpFill").style.width = `${safeProgress}%`;
+        if (xpRing) xpRing.style.setProperty("--progress", safeProgress);
+      } else {
+        document.getElementById("xpText").textContent = `${totalXP} XP · Max level reached`;
+        document.getElementById("xpFill").style.width = "100%";
+        if (xpRing) xpRing.style.setProperty("--progress", 100);
+      }
+
+
+      const badgeWrap = document.getElementById("badges");
+      badgeWrap.innerHTML = badgeRules.map(badge => {
+        const unlocked = badge.check(log);
+        return `
+          <div class="badge ${unlocked ? "" : "locked"}">
+            <b>${badge.icon} ${badge.name}</b>
+            <span>${unlocked ? "Unlocked!" : badge.desc}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    let selectedTopic = null;
+    let timerSeconds = 20 * 60;
+    let timerInterval = null;
+    let isCompletingSession = false;
+
+    function getLog() {
+      return JSON.parse(localStorage.getItem(getPlayerLogKey()) || "[]");
+    }
+
+    function setLog(log) {
+      const earnedChallengeReward = awardChallengeRewardIfEarned(log);
+      localStorage.setItem(getPlayerLogKey(), JSON.stringify(log));
+      renderLog();
+      renderStats();
+      renderGamification();
+      renderWeeklyChallenge();
+
+      if (earnedChallengeReward) {
+        setTimeout(() => {
+          showStarPop();
+          alert("🏆 Coach Michael's Weekly Challenge complete! You earned ⭐ 5 bonus stars!");
+        }, 300);
+      }
+    }
+
+    async function savePlayer() {
+      const name = titleCaseName(document.getElementById("playerName").value);
+      document.getElementById("playerName").value = name;
+      localStorage.setItem("playerName", name);
+
+      currentPlayerId = null;
+      currentPlayerDbLogs = [];
+      currentPlayerDbLoaded = false;
+      localStorage.removeItem("supabasePlayerId");
+      hideAllStatsPanels();
+
+      renderLog();
+      renderStats();
+      renderGamification();
+      renderWeeklyChallenge();
+      renderChallengeHistory();
+
+      alert(name ? `Saved. Let's go, ${name}!` : "Name cleared.");
+
+      if (name && supabaseClient) {
+        setSyncStatus(`${name} saved. Loading database stats...`);
+        ensurePlayer()
+          .then(() => migrateLocalSessionsToSupabase())
+          .then(() => loadCurrentPlayerDbLogs())
+          .then(() => refreshWeeklyChallengeFromDatabase())
+          .then(() => setSyncStatus(`${name} is ready. Stats loaded from the database by player name.`))
+          .catch(err => {
+            console.error(err);
+            setSyncStatus(`Player saved locally, but database setup needs attention: ${err.message}`);
+          });
+      }
+    }
+
+
+    function showStartView(view) {
+      const challengeView = document.getElementById("challengeStartView");
+      const topicsView = document.getElementById("topicsStartView");
+      const challengeTab = document.getElementById("startChallengeTab");
+      const topicsTab = document.getElementById("startTopicsTab");
+
+      const showChallenge = view === "challenge";
+
+      if (challengeView) challengeView.classList.toggle("active", showChallenge);
+      if (topicsView) topicsView.classList.toggle("active", !showChallenge);
+      if (challengeTab) challengeTab.classList.toggle("active", showChallenge);
+      if (topicsTab) topicsTab.classList.toggle("active", !showChallenge);
+
+      const panel = document.getElementById("readyToStart");
+      if (panel) {
+        setTimeout(() => panel.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+      }
+
+      if (!showChallenge && typeof renderTopics === "function") {
+        renderTopics();
+      }
+      if (showChallenge && typeof renderWeeklyChallenge === "function") {
+        renderWeeklyChallenge();
+      }
+    }
+
+
+    function renderTopics() {
+      const wrap = document.getElementById("topics");
+      wrap.innerHTML = "";
+      Object.entries(plans).forEach(([name, plan]) => {
+        const btn = document.createElement("button");
+        btn.className = "topic";
+        const newTag = plan.isNew ? '<span class="new-tag">NEW</span>' : '';
+        btn.innerHTML = `${plan.emoji} ${name}${newTag}<small>${plan.description}</small>`;
+        btn.onclick = () => showPlan(name);
+        wrap.appendChild(btn);
+      });
+    }
+
+    function showPlan(name) {
+      selectedTopic = name;
+      const plan = plans[name];
+      document.getElementById("planCard").classList.remove("hidden");
+      document.getElementById("planName").textContent = `${plan.emoji} ${name}`;
+      document.getElementById("notes").value = "";
+
+      const steps = document.getElementById("steps");
+      steps.innerHTML = "";
+      plan.steps.forEach((step, i) => {
+        const item = document.createElement("div");
+        item.className = "step";
+        item.innerHTML = `
+          <input type="checkbox" />
+          <div><b>${i + 1}. ${step[0]}</b><span>${step[1]}</span></div>
+          <div class="minutes">${step[2]}m</div>
+        `;
+        steps.appendChild(item);
+      });
+
+      const recordsCard = document.getElementById("fastFeetRecords");
+      if (recordsCard) {
+        recordsCard.classList.toggle("hidden", name !== "Fast Feet");
+        renderFastFeetRecords();
+      }
+
+      resetTimer();
+      document.getElementById("planCard").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function hidePlan() {
+      document.getElementById("planCard").classList.add("hidden");
+      const recordsCard = document.getElementById("fastFeetRecords");
+      if (recordsCard) recordsCard.classList.add("hidden");
+      pauseTimer();
+    }
+
+    function updateTimerDisplay() {
+      const min = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+      const sec = (timerSeconds % 60).toString().padStart(2, "0");
+      document.getElementById("timer").textContent = `${min}:${sec}`;
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+      showStartView('challenge');
+        } else {
+          pauseTimer();
+          alert("Time! Great work.");
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timerSeconds = 20 * 60;
+      updateTimerDisplay();
+      showStatsNotice();
+    }
+
+    function completeSession() {
+      if (!selectedTopic) return;
+      if (isCompletingSession) {
+        alert("That session is already being saved. Give it a second!");
+        return;
+      }
+
+      const player = localStorage.getItem("playerName") || document.getElementById("playerName").value || "Player";
+      const notes = document.getElementById("notes").value.trim();
+      const log = getLog();
+      const cleanPlayer = titleCaseName(player);
+      const now = Date.now();
+      const recentDuplicate = log.find(item => {
+        const itemTime = new Date(item.date).getTime();
+        return !item.isBonus && titleCaseName(item.player) === cleanPlayer && item.topic === selectedTopic && Math.abs(now - itemTime) < 2 * 60 * 1000;
+      });
+      if (recentDuplicate) {
+        alert("Looks like this session was just logged. To avoid duplicates, wait a couple minutes before logging the same topic again.");
+        return;
+      }
+      isCompletingSession = true;
+
+      const item = {
+        player: cleanPlayer,
+        topic: selectedTopic,
+        minutes: 20,
+        stars: 1,
+        xp: 100,
+        notes,
+        date: new Date().toISOString()
+      };
+
+      log.unshift(item);
+
+      setLog(log);
+      syncTrainingLogItem(item)
+        .then(() => { loadLeaderboard(); loadPlayerProfile(); loadMonthlyChallenge(); loadHallOfFame(); })
+        .finally(() => { isCompletingSession = false; });
+      showStarPop();
+      alert("Session logged. You earned ⭐ 1 star and 100 XP!");
+      hidePlan();
+    }
+
+    function renderLog() {
+      const list = document.getElementById("logList");
+      if (!list) return;
+
+      const log = getUiLogs ? getUiLogs() : getLog();
+
+      if (!log.length) {
+        list.innerHTML = `<div class="empty">No sessions yet. Complete a training session to get started.</div>`;
+        return;
+      }
+
+      list.innerHTML = log.map(item => {
+        const d = new Date(item.date);
+        return `
+          <div class="log-item">
+            <b>${item.isBonus ? "🏆 " + item.topic + " · ⭐ " + item.stars + " bonus stars" : item.topic + " · " + item.minutes + " min"}</b>
+            <span>${d.toLocaleDateString()} at ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            ${item.notes ? `<p style="margin:8px 0 0;color:var(--muted)">${item.notes}</p>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderStats() {
+      const log = getUiLogs();
+      const trainingOnly = log.filter(x => !x.isBonus);
+
+      const totalSessionsEl = document.getElementById("totalSessions");
+      const totalMinutesEl = document.getElementById("totalMinutes");
+      const streakEl = document.getElementById("streak");
+      const favoriteEl = document.getElementById("favorite");
+
+      if (!totalSessionsEl && !totalMinutesEl && !streakEl && !favoriteEl) return;
+
+      if (totalSessionsEl) totalSessionsEl.textContent = trainingOnly.length;
+      if (totalMinutesEl) totalMinutesEl.textContent = trainingOnly.reduce((sum, x) => sum + x.minutes, 0);
+
+      const counts = {};
+      trainingOnly.forEach(x => counts[x.topic] = (counts[x.topic] || 0) + 1);
+      const favorite = Object.entries(counts).sort((a,b) => b[1] - a[1])[0];
+      if (favoriteEl) favoriteEl.textContent = favorite ? favorite[0] : "—";
+
+      if (streakEl) streakEl.textContent = calculateStreak(trainingOnly);
+    }
+
+    function clearLog() {
+      if (confirm("Clear this player's local training sessions on this device? Database stats will not be deleted.")) {
+        localStorage.removeItem(getPlayerLogKey());
+        localStorage.removeItem(getChallengeRewardKey());
+        localStorage.removeItem("challengeHistory");
+        renderLog();
+        renderStats();
+        renderGamification();
+        renderWeeklyChallenge();
+      }
+    }
+
+
+    function showStatsNotice() {
+      const notice = document.getElementById("statsNotice");
+      if (!notice) return;
+      notice.classList.add("show");
+      setTimeout(() => notice.classList.remove("show"), 10000);
+    }
+
+    function init() {
+      initSupabase();
+      document.getElementById("playerName").value = localStorage.getItem("playerName") || "";
+      renderTopics();
+      renderLog();
+      renderStats();
+      renderGamification();
+      renderWeeklyChallenge();
+      renderFastFeetRecords();
+      renderChallengeHistory();
+      updateTimerDisplay();
+      if (localStorage.getItem("playerName")) {
+        loadCurrentPlayerDbLogs().then(() => migrateLocalSessionsToSupabase()).then(() => refreshWeeklyChallengeFromDatabase());
+      }
+    }
+
+    try {
+      init();
+    } catch (err) {
+      console.error(err);
+      const app = document.querySelector(".app");
+      if (app) {
+        const warning = document.createElement("section");
+        warning.className = "card";
+        warning.style.marginBottom = "20px";
+        warning.innerHTML = `<h3>App startup issue</h3><p style="color:var(--muted)">${err.message}</p>`;
+        app.prepend(warning);
+      }
+    }
+  </script>
+</body>
+</html>
